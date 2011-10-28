@@ -166,37 +166,6 @@ switch($options[xPDOTransport::PACKAGE_ACTION]) {
                 $modx->log(xPDO::LOG_LEVEL_INFO,'Failed to attach TVs to Templates');
             }
         }
-        /* If the user filled in a Contact ID during the install, use it to set the
-         * contact_id default property and set the contact_appeal property to true.
-         * If not, just set the 'contact_appeal' property to false.
-         */
-
-        $contactId = $modx->getOption('contact_id', $options, false);
-        if (! empty($contactId)) {
-            $modx->log(xPDO::LOG_LEVEL_INFO,'Setting contact_id property to: ' . $contactId);
-            $pluginObj = $modx->getObject('modPlugin',array('name'=>'BotBlockX'));
-            if ($pluginObj) {
-                $fields = array('contact_id' => $contactId, 'contact_appeal'=> '1');
-                if ($pluginObj->setProperties($fields, true)) {
-                    if ($pluginObj->save()) {
-                        $modx->log(xPDO::LOG_LEVEL_INFO,'Successfully set contact_id default property');
-                        $modx->log(xPDO::LOG_LEVEL_INFO,'Successfully set contact_appeal default property');
-                    }
-                }
-            }
-
-        } else {
-            $pluginObj = $modx->getObject('modPlugin',array('name'=>'BotBlockX'));
-            if ($pluginObj) {
-                $fields = array('contact_appeal' => '0');
-                if ($pluginObj->setProperties($fields, true)) {
-                    if ($pluginObj->save()) {
-                        $modx->log(xPDO::LOG_LEVEL_INFO,'Successfully set contact_appeal default property to false');
-                    }
-                }
-            }
-
-        }
 
     /* This code will execute during an upgrade */
     case xPDOTransport::ACTION_UPGRADE:

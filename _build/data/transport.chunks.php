@@ -45,5 +45,12 @@ $chunks[2]->fromArray(array(
     'snippet' => file_get_contents($sources['source_core'].'/elements/chunks/fastscraper.chunk.tpl'),
     'properties' => '',
 ),'',true,true);
-
+$chunks[3]= $modx->newObject('modChunk');
+$chunks[3]->fromArray(array(
+    'id' => 3,
+    'name' => 'AppealTpl',
+    'description' => 'Appeal Chunk for BotBlockX',
+    'snippet' => file_get_contents($sources['source_core'].'/elements/chunks/appeal.chunk.tpl'),
+    'properties' => '',
+),'',true,true);
 return $chunks;

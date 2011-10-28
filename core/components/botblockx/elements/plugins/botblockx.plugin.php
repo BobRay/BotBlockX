@@ -121,8 +121,21 @@ $bStartOver = empty($props['start_over_secs']) ? 43200 : $props['start_over_secs
 * (default 3) */
 $ipLength = empty($props['ip_length']) ? 3 : $props['ip_length'];
 
-/* path to log file */
+/* Specify whether warnings will contain a message about appealing via
+ * the contact page */
+$showFastAppeal = @$props['show_fast_appeal'];
+$showSlowAppeal = @$props['show_slow_appeal'];
 
+/* Set Tpl chunk names */
+$appealTpl = $modx->getOption('appeal_tpl',$props,null);
+$appealTpl = empty($appealTpl)? 'AppealTpl' : $appealTpl;
+$slowTpl = $modx->getOption('slow_tpl', $props, null);
+$slowTpl = empty($slowTpl)? 'SlowScraperTpl' : $appealTpl;
+$fastTpl = $modx->getOption('fast_tpl', $props, null);
+$fastTpl = empty($fastTpl)? 'FastScraperTpl' : $appealTpl;
+
+
+/* path to log file */
 $ipLogFile = _L_DIRECTORY . _B_LOGFILE;
 
 $ipFile = '';
@@ -204,9 +217,10 @@ if (file_exists($ipFile)) {
                 'bbx.visits' => $visits,
                 'bbx.duration' => (int)$duration / 3600,
                 'bbx.wait' => (int)($wait / 3600),
-                'bbx.contact_id' => $modx->getOption('contact_id',$props,'contact_id not set'),
             );
+            $fields['bbx.appeal'] = $showSlowAppeal? $modx->getChunk($appealTpl) : '';
             echo $modx->getChunk('SlowScraperTpl', $fields);
+
             $bLogLine = "$ipRemote " . date('d/m/Y H:i:s') . " $useragent (slow scraper)\n";
 
             /* ********* test for fast scrapers *********** */
@@ -226,9 +240,11 @@ if (file_exists($ipFile)) {
             header('Content-Type: text/html');
             $fields = array(
                 'bbx.wait' => $wait,
-                'bbx.contact_id' => $modx->getOption('contact_id',$props,'contact_id not set'),
             );
+            $fields['bbx.appeal'] = $showFastAppeal? $modx->getChunk($appealTpl) : '';
             echo $modx->getChunk('FastScraperTpl', $fields);
+
+
             $bLogLine = "$ipRemote " . date('d/m/Y H:i:s') . " $useragent (fast scraper)\n";
         }
     } else {
