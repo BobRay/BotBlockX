@@ -204,6 +204,7 @@ if (file_exists($ipFile)) {
                 'bbx.visits' => $visits,
                 'bbx.duration' => (int)$duration / 3600,
                 'bbx.wait' => (int)($wait / 3600),
+                'bbx.contact_id' => $modx->getOption('contact_id',$props,'contact_id not set'),
             );
             echo $modx->getChunk('SlowScraperTpl', $fields);
             $bLogLine = "$ipRemote " . date('d/m/Y H:i:s') . " $useragent (slow scraper)\n";
@@ -225,6 +226,7 @@ if (file_exists($ipFile)) {
             header('Content-Type: text/html');
             $fields = array(
                 'bbx.wait' => $wait,
+                'bbx.contact_id' => $modx->getOption('contact_id',$props,'contact_id not set'),
             );
             echo $modx->getChunk('FastScraperTpl', $fields);
             $bLogLine = "$ipRemote " . date('d/m/Y H:i:s') . " $useragent (fast scraper)\n";
