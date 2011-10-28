@@ -1,5 +1,6 @@
 # ignore all .htaccess
 .htaccess
+source/
 
 # ignore original ah source files
 source
