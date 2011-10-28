@@ -166,88 +166,37 @@ switch($options[xPDOTransport::PACKAGE_ACTION]) {
                 $modx->log(xPDO::LOG_LEVEL_INFO,'Failed to attach TVs to Templates');
             }
         }
-        /* This section will set the site_name system setting based on the checkbox and
-         * input field in the user.input.php form presented during the install.
+        /* If the user filled in a Contact ID during the install, use it to set the
+         * contact_id default property and set the contact_appeal property to true.
+         * If not, just set the 'contact_appeal' property to false.
          */
-        if (false) {
-            $setSiteName = $modx->getOption('change_sitename', $options, false);
-            if ($setSiteName) {
-                $siteName = $modx->getOption('sitename', $options);
-                $modx->log(xPDO::LOG_LEVEL_INFO,'Setting site name to: ' . $siteName);
-                $setting = $modx->getObject('modSystemSetting','site_name');
-                $setting->set('value', $siteName);
-                $setting->save();
-            }
 
-            /* This section will set any system settings in the variables at the top of this file. */
-            if ($hasExistingSettings) {
-                $modx->log(xPDO::LOG_LEVEL_INFO,'Attempting so set existing System Settings');
-                foreach($settings as $key=>$value) {
-                    $setting = $modx->getObject('modSystemSetting',array('key'=>$key));
-                    if ($setting) {
-                        $setting->set('value',$value);
-                        if ($setting->save()){
-                            $value = $value? $value : '0'; /* make false values show in msg */
-                            $modx->log(xPDO::LOG_LEVEL_INFO,'Updated System Setting: ' . $key . ' to ' . $value );
-                        }
-                    } else {
-                        $modx->log(xPDO::LOG_LEVEL_INFO,'Could not retrieve setting: ' . $key);
+        $contactId = $modx->getOption('contact_id', $options, false);
+        if (! empty($contactId)) {
+            $modx->log(xPDO::LOG_LEVEL_INFO,'Setting contact_id property to: ' . $contactId);
+            $pluginObj = $modx->getObject('modPlugin',array('name'=>'BotBlockX'));
+            if ($pluginObj) {
+                $fields = array('contact_id' => $contactId, 'contact_appeal'=> '1');
+                if ($pluginObj->setProperties($fields, true)) {
+                    if ($pluginObj->save()) {
+                        $modx->log(xPDO::LOG_LEVEL_INFO,'Successfully set contact_id default property');
+                        $modx->log(xPDO::LOG_LEVEL_INFO,'Successfully set contact_appeal default property');
                     }
                 }
             }
+
+        } else {
+            $pluginObj = $modx->getObject('modPlugin',array('name'=>'BotBlockX'));
+            if ($pluginObj) {
+                $fields = array('contact_appeal' => '0');
+                if ($pluginObj->setProperties($fields, true)) {
+                    if ($pluginObj->save()) {
+                        $modx->log(xPDO::LOG_LEVEL_INFO,'Successfully set contact_appeal default property to false');
+                    }
+                }
+            }
+
         }
-        /* This section connects MyPropertySet1 to MySnippet1.
-         * You'll have to modify the code to meet your needs.
-         *
-         * Note that if you want to connect a bunch of property sets to a bunch of
-         * elements, since all elements and property sets are in our category
-         * we could get the category ID and then get the objects with two
-         * $modx->getCollection() calls and put the code below in a double foreach loop.
-         *
-         * For example, to connect all our property sets to all our snippets, we'd do this:
-         *
-         * $category = $modx->getObject('modCategory', array('category','BotBlockX'));
-         * $cId = $category->get('id');
-         * $snippets = $modx->getCollection('modSnippet',array('category'=>$cId));
-         * $propertySets = $modx->getCollection('modPropertySet',array('category'=>$cId));
-         * foreach($snippets as $snippet) {
-         *     foreach($propertySets as $propertySet {
-         *         $intersect = $modx->newObject('modElementPropertySet');
-         *         $intersect->set('element',$snippet->get('id'));
-         *         $intersect->set('element_class','modSnippet');
-         *         $intersect->set('property_set',$propertySet->get('id'));
-         *         $intersect->save();
-         *     }
-         * }
-         *
-         */
-         if (false) {
-             $snippetName = 'MySnippet1';
-             $propertySetName = 'MyPropertySet1';
-             $snippet = $modx->getObject('modSnippet', array('name'=>$snippetName));
-             if ($snippet) {
-                 $propertySet = $modx->getObject('modPropertySet',array('name'=>$propertySetName));
-                 if ($propertySet) {
-                     $intersect = $modx->newObject('modElementPropertySet');
-                     $intersect->set('element',$snippet->get('id'));
-                     $intersect->set('element_class','modSnippet');
-                     $intersect->set('property_set',$propertySet->get('id'));
-                     if ($intersect->save()) {
-                         $modx->log(xPDO::LOG_LEVEL_INFO,'Connected snippet ' . $snippetName .  ' to property set ' . $propertySetName);
-                     } else {
-                         $modx->log(xPDO::LOG_LEVEL_INFO,'Failed to connect snippet ' . $snippetName .  ' to property set ' . $propertySetName);
-                     }
-
-                 } else {
-                     $modx->log(xPDO::LOG_LEVEL_INFO,'Could not retrieve property set: ' . $propertySetName);
-                 }
-
-             } else {
-                     $modx->log(xPDO::LOG_LEVEL_INFO,'Could not retrieve snippet: ' . $snippetName);
-             }
-
-             break;
-         }
 
     /* This code will execute during an upgrade */
     case xPDOTransport::ACTION_UPGRADE:
