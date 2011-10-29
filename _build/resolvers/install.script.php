@@ -58,6 +58,24 @@ $connectPropertySets = false;
 /* work starts here */
 $success = true;
 
+$blockDir = MODX_BASE_PATH . 'block';
+$logDir = MODX_BASE_PATH . 'log';
+
+/* empty and remove directory */
+if (!function_exists("rrmdir")) {
+    function rrmdir($dir) {
+        if (is_dir($dir)) {
+             $objects = scandir($dir);
+             foreach ($objects as $object) {
+               if ($object != "." && $object != "..") {
+                 if (filetype($dir."/".$object) == "dir") rrmdir($dir."/".$object); else unlink($dir."/".$object);
+               }
+             }
+             reset($objects);
+             rmdir($dir);
+        }
+    }
+}
 $modx->log(xPDO::LOG_LEVEL_INFO,'Running PHP Resolver.');
 switch($options[xPDOTransport::PACKAGE_ACTION]) {
     /* This code will execute during an install */
@@ -83,26 +101,25 @@ switch($options[xPDOTransport::PACKAGE_ACTION]) {
         }
         
         /* Create log and block directories */
-        $blockDir = MODX_BASE_PATH . 'block';
-        $logDir = MODX_BASE_PATH . 'log';
+
         if (! is_dir($blockDir)) {
             if (!mkdir($blockDir, 0700)) {
                 $modx->log(xPDO::LOG_LEVEL_ERROR, "Failed to create directory: $blockDir");
             } else {
-                $modx->log(xPDO::LOG_LEVEL_ERROR, "Created directory: $blockDir");
+                $modx->log(xPDO::LOG_LEVEL_INFO, "Created directory: $blockDir");
             }
         } else {
-            $modx->log(xPDO::LOG_LEVEL_ERROR,  $blockDir .  " Already exists");
+            $modx->log(xPDO::LOG_LEVEL_INFO,  $blockDir .  " Already exists");
         }
             
         if (! is_dir($logDir)) {
             if (!mkdir($logDir, 0700)) {
                 $modx->log(xPDO::LOG_LEVEL_ERROR, "Failed to create directory: $logDir");
             } else {
-                $modx->log(xPDO::LOG_LEVEL_ERROR, "Created directory: $logDir");
+                $modx->log(xPDO::LOG_LEVEL_INFO, "Created directory: $logDir");
             }
         } else {
-            $modx->log(xPDO::LOG_LEVEL_ERROR,  $logDir .  " Already exists");
+            $modx->log(xPDO::LOG_LEVEL_INFO,  $logDir .  " Already exists");
         }
     
     /* This code will execute during an upgrade */
@@ -118,6 +135,13 @@ switch($options[xPDOTransport::PACKAGE_ACTION]) {
     /* This code will execute during an uninstall */
     case xPDOTransport::ACTION_UNINSTALL:
         $modx->log(xPDO::LOG_LEVEL_INFO,'Uninstalling . . .');
+        /* empty and remove block and log directories */
+        rrmdir ($logDir);
+        $modx->log(xPDO::LOG_LEVEL_INFO,'Removed log directory');
+
+        rrmdir ($blockDir);
+        $modx->log(xPDO::LOG_LEVEL_INFO,'Removed block directory');
+        
         $success = true;
         break;
 
