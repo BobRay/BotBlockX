@@ -38,30 +38,39 @@
  * use $object->xpdo
  */
 
-return true;  /* ToDo: Remove this */
-
-
-
 $modx =& $object->xpdo;
 
 
-$modx->log(xPDO::LOG_LEVEL_INFO,'Running PHP Validator.');
+
 switch($options[xPDOTransport::PACKAGE_ACTION]) {
     case xPDOTransport::ACTION_INSTALL:
-        /* ToDo: Test for enabled fileAtime() and fileMtime() here */
-        $modx->log(xPDO::LOG_LEVEL_INFO,'Checking for installed getResources snippet ');
+        $modx->log(xPDO::LOG_LEVEL_INFO,'Running PHP Validator.');
+        $modx->log(xPDO::LOG_LEVEL_INFO,'Making sure filemtime is enabled ');
         $success = true;
-        /* Check for getResources */
-        $gr = $modx->getObject('modSnippet',array('name'=>'getResources'));
-        if ($gr) {
-            $modx->log(xPDO::LOG_LEVEL_INFO,'getResources found - install will continue');
-            unset($gr);
-        } else {
-            $modx->log(xPDO::LOG_LEVEL_ERROR,'This package requires the getResources package. Please install it and reinstall BotBlockX');
-            $success = false;
-        }
 
+        $file = MODX_CORE_PATH . 'cache/deleteme';
+   $fp = fopen($file,'w');
+
+   fclose($fp);
+
+   if (! touch($file, time(), time() )) {
+            $modx->log(xPDO::LOG_LEVEL_INFO,'TOUCH FAILED');
+
+   }
+   if (! touch($file, time(), time() + 1 )) {
+            $modx->log(xPDO::LOG_LEVEL_INFO,'TOUCH FAILED');
+   }
+   clearstatcache();
+   /* if filemtime and fileatime are enabled, these should differ */
+   if (filemtime($file) == fileatime($file) ) {
+       $success = false;
+       $modx->log(xPDO::LOG_LEVEL_ERROR,'Your server does not have fileatime enabled. This plugin will not run properly without it -- install aborted.');
+   } else {
+       $modx->log(xPDO::LOG_LEVEL_INFO,'Test Succeeded - install will continue.');
+   }
+   unlink($file);
         break;
+    
    /* These cases must return true or the upgrade/uninstall will be cancelled */
    case xPDOTransport::ACTION_UPGRADE:
         $success = true;
