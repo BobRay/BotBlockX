@@ -41,13 +41,14 @@
 return true;  /* ToDo: Remove this */
 
 
+
 $modx =& $object->xpdo;
 
 
 $modx->log(xPDO::LOG_LEVEL_INFO,'Running PHP Validator.');
 switch($options[xPDOTransport::PACKAGE_ACTION]) {
     case xPDOTransport::ACTION_INSTALL:
-
+        /* ToDo: Test for enabled fileAtime() and fileMtime() here */
         $modx->log(xPDO::LOG_LEVEL_INFO,'Checking for installed getResources snippet ');
         $success = true;
         /* Check for getResources */
