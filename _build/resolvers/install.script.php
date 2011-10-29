@@ -42,14 +42,7 @@ $modx =& $object->xpdo;
  * $modx->getObject().
  */
 
-/* Connecting plugins to the appropriate system events and
- * connecting TVs to their templates is done here.
- *
- * Be sure to set the name of the category in $category.
- *
- * You will have to hand-code the names of the elements and events
- * in the arrays below.
- */
+/* Connecting plugins to the appropriate system events is done here. */
 
 $pluginEvents = array('OnPageNotFound', 'OnHandleRequest');
 $plugins = array('BotBlockX');
@@ -57,34 +50,12 @@ $plugins = array('BotBlockX');
 $category = 'BotBlockX';
 
 $hasPlugins = true;
-$hasTemplates = false;
-$hasTemplateVariables = false;
-
- /* If the following variable is set to true, this script will set
-  * the existing system settings below. I like these setting, which
-  * improve the Manager speed and usability (IMO), but you should
-  * generally avoid setting existing system settings for another
-  * user unless absolutely necessary for your component. Note that
-  *  the changes will remain even if the component is uninstalled
-  */
-
- $hasExistingSettings = false;
-
-/* These existing system settings will always be set during the install */
-if ($hasExistingSettings) {
-    $settings = array(
-        'feed_modx_news_enabled'=> false,
-        'feed_modx_security_enabled'=> false,
-        'auto_check_pkg_updates' => false,
-        'default_per_page' => '100',
-        'automatic_alias' => true,
-    );
-}
-
-/* set to true to connect property sets to elements */
-$connectPropertySets = true;
 
 
+ /* set to true to connect property sets to elements */
+$connectPropertySets = false;
+
+/* work starts here */
 $success = true;
 
 $modx->log(xPDO::LOG_LEVEL_INFO,'Running PHP Resolver.');
@@ -110,63 +81,30 @@ switch($options[xPDOTransport::PACKAGE_ACTION]) {
                 }
             }
         }
-        /* Connect TVs to Templates. It's assumed that all TVs
-         * will be connected to all package templates. If you
-         * want to connect different TVs to different templates
-         * you need to rewrite this.
-         */
-
-        if ($hasTemplates && $hasTemplateVariables) {
-            $categoryObj = $modx->getObject('modCategory',array('category'=> $category));
-            if (! $categoryObj) {
-                $modx->log(xPDO::LOG_LEVEL_INFO,'Coult not retrieve category object: ' . $category);
+        
+        /* Create log and block directories */
+        $blockDir = MODX_BASE_PATH . 'block';
+        $logDir = MODX_BASE_PATH . 'log';
+        if (! is_dir($blockDir)) {
+            if (!mkdir($blockDir, 0700)) {
+                $modx->log(xPDO::LOG_LEVEL_ERROR, "Failed to create directory: $blockDir");
             } else {
-                $categoryId = $categoryObj->get('id');
+                $modx->log(xPDO::LOG_LEVEL_ERROR, "Created directory: $blockDir");
             }
-
-            $modx->log(xPDO::LOG_LEVEL_INFO,'Attempting to attach TVs to Templates');
-            $ok = true;
-            $templates = $modx->getCollection('modTemplate', array('category'=> $categoryId));
-            if (!empty($templates)) {
-
-                $tvs = $modx->getCollection('modTemplateVar', array('category'=> $categoryId));
-
-                if (!empty($tvs)) {
-                    foreach ($templates as $template) {
-                        foreach($tvs as $tv) {
-                            $tvt = $modx->newObject('modTemplateVarTemplate');
-                            if ($tvt) {
-                                $r1 = $tvt->set('templateid', $template->get('id'));
-                                $r2 = $tvt->set('tmplvarid', $tv->get('id'));
-                                if ($r1 && $r2) {
-                                    $tvt->save();
-                                } else {
-                                    $ok = false;
-                                    $modx->log(xPDO::LOG_LEVEL_INFO,'Could not set TemplateVarTemplate fields');
-                                }
-                            } else {
-                                $ok = false;
-                                $modx->log(xPDO::LOG_LEVEL_INFO,'Could not create TemplateVarTemplate');
-                            }
-                        }
-                    }
-                } else {
-                    $ok = false;
-                    $modx->log(xPDO::LOG_LEVEL_INFO,'Could not retrieve TVs in category: ' . $category);
-                }
-
-            } else {
-                $ok = false;
-                $modx->log(xPDO::LOG_LEVEL_INFO,'Could not retrieve Templates in category: ' . $category);
-            }
-
-            if ($ok) {
-                $modx->log(xPDO::LOG_LEVEL_INFO,'TVs attached to Templates successfully');
-            } else {
-                $modx->log(xPDO::LOG_LEVEL_INFO,'Failed to attach TVs to Templates');
-            }
+        } else {
+            $modx->log(xPDO::LOG_LEVEL_ERROR,  $blockDir .  " Already exists");
         }
-
+            
+        if (! is_dir($logDir)) {
+            if (!mkdir($logDir, 0700)) {
+                $modx->log(xPDO::LOG_LEVEL_ERROR, "Failed to create directory: $logDir");
+            } else {
+                $modx->log(xPDO::LOG_LEVEL_ERROR, "Created directory: $logDir");
+            }
+        } else {
+            $modx->log(xPDO::LOG_LEVEL_ERROR,  $logDir .  " Already exists");
+        }
+    
     /* This code will execute during an upgrade */
     case xPDOTransport::ACTION_UPGRADE:
 
