@@ -44,7 +44,7 @@ $hasSnippets = false;
 $hasChunks = true;
 $hasTemplates = false;
 $hasResources = false;
-$hasValidator = false; /* Run a validator before installing anything */
+$hasValidator = true; /* Run a validator before installing anything */
 $hasResolver = true; /* Run a resolver after installing everything */
 $hasSetupOptions = true; /* HTML/PHP script to interact with user */
 $hasMenu = false; /* Add items to the MODx Top Menu */
@@ -253,7 +253,7 @@ $vehicle = $builder->createVehicle($category,$attr);
 
 if ($hasValidator) {
     $modx->log(modX::LOG_LEVEL_INFO,'Adding in Script Validator.');
-    $vehicle->validate('php',array(
+    $ret = $vehicle->validate('php',array(
         'source' => $sources['validators'] . 'preinstall.script.php',
     ));
 }
@@ -400,7 +400,7 @@ $builder->setPackageAttributes(array(
     'changelog' => file_get_contents($sources['docs'] . 'changelog.txt'),
     /* 'setup-options' => array(
         'source' => $sources['install_options'].'user.input.php',
-    ),*/
+    ), */
 ));
 
 /* Last step - zip up the package */
