@@ -84,6 +84,15 @@ if (!function_exists("ipIsInNet")) {
     }
 }
 
+if (!function_exists("get_host")) {
+    function get_host($ip){
+            $ptr= implode(".",array_reverse(explode(".",$ip))).".in-addr.arpa";
+            $host = dns_get_record($ptr,DNS_PTR);
+            if ($host == null) return $ip;
+            else return $host[0]['target'];
+    }
+}
+
 $oldSetting = ignore_user_abort(TRUE); // otherwise can screw-up logfile
 if (!empty($GLOBALS['_SERVER'])) {
     $_SERVER_ARRAY = '_SERVER';
@@ -108,9 +117,9 @@ $bMaxVisit = empty($props['max_visits']) ? 14 : $props['max_visits'];
 $bPenalty = empty($props['penalty']) ? 60 : $props['penalty'];
 
 /* For slow scrapers, tot visits allowed within $bStartOver.
-*  Set to `none` to disable slow-scraper block (default 500)
+*  Set to `none` to disable slow-scraper block (default 1500)
 */
-$bTotVisit = empty($props['total_visits']) ? 500 : $props['total_visits'];
+$bTotVisit = empty($props['total_visits']) ? 1500 : $props['total_visits'];
 $bTotVisit = $bTotVisit == 'none' || $bTotVisit == 'None' ? 0 : $bTotVisit;
 
 /* secs between tracking restarts (default 12 hours = 43200) */
@@ -221,7 +230,7 @@ if (file_exists($ipFile)) {
             $fields['bbx.appeal'] = $showSlowAppeal? $modx->getChunk($appealTpl) : '';
             echo $modx->getChunk('SlowScraperTpl', $fields);
 
-            $bLogLine = "$ipRemote " . date('d/m/Y H:i:s') . " $useragent (slow scraper)\n";
+            $bLogLine = "$ipRemote`" . get_host($ipRemote) . '`' . date('d/m/Y H:i:s') . "`$useragent`(slow scraper)\n";
 
             /* ********* test for fast scrapers *********** */
         } elseif (
@@ -245,7 +254,7 @@ if (file_exists($ipFile)) {
             echo $modx->getChunk('FastScraperTpl', $fields);
 
 
-            $bLogLine = "$ipRemote " . date('d/m/Y H:i:s') . " $useragent (fast scraper)\n";
+            $$bLogLine = "$ipRemote`" . get_host($ipRemote) . '`' . date('d/m/Y H:i:s') . "`$useragent`(fast scraper)\n";
         }
     } else {
         if ($props['debug']) {
