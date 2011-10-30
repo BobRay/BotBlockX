@@ -1,4 +1,7 @@
 <?php
+
+/* For reference. This is Alex's original code */
+
 /* Items prepended with an underscore are Constants that need to be define()'d
  * somewhere in your scripts before this snippet of code gets used:
  * eg (*nix):

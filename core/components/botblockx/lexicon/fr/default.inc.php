@@ -2,6 +2,7 @@
 /**
  * BotBlockX
  *
+ * 
  *
  * BotBlockX is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -22,22 +23,15 @@
  * Default Lexicon Topic
  *
  * @package botblockx
- * @subpackge lexicon
+ * @subpackage lexicon
  */
-$_lang['mc_no_error_tpl'] = 'Impossible de trouver &amp;errortpl: [[+tpl]]';
-$_lang['mc_main_header'] = 'Créer/éditer une ressource';
-$_lang['mc_error_presubmit'] = 'Désolé… il y a eu un (ou plusieurs) problème(s) à la création du formulaire:';
-$_lang['mc_error_submit'] = 'Désolé… il y a eu un (ou plusieurs) problème(s) avec votre "submission":';
-$_lang['mc_error_required'] = 'Le champ [[+name]] est requis.';
-$_lang['mc_no_resource_group'] = 'Impossible de trouver le groupe de ressources [[+name]].';
-$_lang['mc_no_resource'] = 'Erreur lors de l\'obtention de la ressource: [[+id]].';
-$_lang['mc_no_template_name'] = 'Erreur lors de l\'obtention du modèle: [[+name]].';
-$_lang['mc_no_tvs'] = 'Vous vouliez ordonner les variables de modèle, mais ce modèle n\'en contient aucune.';
-$_lang['mc_unauthorized'] = 'Vous n\'êtes pas autorisé à publier des articles.';
-$_lang['mc_folder_not_sent'] = 'Vous avez configuré &amp;template "à parent" mais n\'avez pas inclue le "paramètre de dossier".';
-$_lang['mc_resource_save_failed'] = 'Une erreur est survenue lors de la sauvegarde de la ressource.';
-$_lang['mc_to_template_id'] = 'Il n\'y a pas de modèle ayant pour ID: [[+id]].';
-$_lang['mc_to_template_name'] = 'Il n\'y a pas de modèle ayant pour nom: [[+name]].';
+
+/* botblockx example strings -
+ * These would be used for messages displayed by your component
+ * (e.g. error messages, prompts, etc.).
+ */
+$_lang['botblockx'] = 'BotBlockX';
+$_lang['botblockx.menu_desc'] = 'BotBlockX is a plugin for MODX Revolution that stops bots from hammering your site';
 
 
 
