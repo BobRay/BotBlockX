@@ -33,8 +33,5 @@
 $_lang['botblockx'] = 'BotBlockX';
 $_lang['botblockx.menu_desc'] = 'BotBlockX is a plugin for MODX Revolution that stops bots from hammering your site';
 
-$_lang['ahx_not_in_group'] = 'You are not in any of the authorized user groups.';
-$_lang['ahx_not_logged_in'] = 'You must be logged in to post.';
-$_lang['ahx_no_permissions'] = 'You do not have the necessary permissions.';
 
 
