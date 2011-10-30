@@ -6,7 +6,7 @@ This plugin is in development and should NOT be used on a live server.
 **Author:** Alex Kemp [Modem-Help](http://bobsguides.com)
 **Author:** Bob Ray <http://bobsguides.com> [Bob's Guides](http://bobsguides.com)
 
-Documentation is available at [Bob's Guides](http://bobsguides.com/antihammerx-tutorial.html)
+Documentation is available at [Bob's Guides](http://bobsguides.com/botblockx-tutorial.html)
 
 BotBlockX is a plugin for MODx Revolution that stops bad bots from hammering your site looking for a way to break in and stops scrapers from stealing your content.
 
