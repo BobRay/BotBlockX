@@ -63,13 +63,13 @@ if (!defined('_B_DIRECTORY')) {
     define('_B_DIRECTORY', _B_SERVER_ROOT . 'block/');
 }
 if (!defined('_B_LOGFILE')) {
-    define('_B_LOGFILE', 'ipblock.log');
+    define('_B_LOGFILE', 'ipblocklog');
 }
 if (!defined('_B_LOGMAXLINES')) {
     define('_B_LOGMAXLINES', 1000);
 }
 if (!defined('_L_DIRECTORY')) {
-    define('_L_DIRECTORY', _B_SERVER_ROOT . 'logs/');
+    define('_L_DIRECTORY', _B_SERVER_ROOT . 'log/');
 }
 
 if (!function_exists("ipIsInNet")) {
@@ -92,8 +92,12 @@ if (!function_exists("get_host")) {
             else return $host[0]['target'];
     }
 }
+$props =& $scriptProperties;
 
 $oldSetting = ignore_user_abort(TRUE); // otherwise can screw-up logfile
+
+
+
 if (!empty($GLOBALS['_SERVER'])) {
     $_SERVER_ARRAY = '_SERVER';
 } elseif (!empty($GLOBALS['HTTP_SERVER_VARS'])) {
@@ -103,8 +107,22 @@ if (!empty($GLOBALS['_SERVER'])) {
 }
 
 global ${$_SERVER_ARRAY};
-$props =& $scriptProperties;
+
 $ipRemote = ${$_SERVER_ARRAY}['REMOTE_ADDR'];
+
+/* Nuke reflect violators up front */
+if (($modx->event->name == 'OnPageNotFound') && $props['reflect_lock'] && stristr($_SERVER['REQUEST_URI'], 'reflect')) {
+            $reflectTpl = empty($props['reflect_message_tpl']) ? 'ReflectMessageTpl' : $props['reflect_message_tpl'];
+            $useragent = (isset(${$_SERVER_ARRAY}['HTTP_USER_AGENT']))
+                    ? ${$_SERVER_ARRAY}['HTTP_USER_AGENT']
+                    : '<unknown user agent>';
+            header('HTTP/1.0 503 Service Unavailable');
+            header("Retry-After: 86400");
+            header('Connection: close');
+            header('Content-Type: text/html');
+            echo $modx->getChunk($reflectTpl);
+            $bLogLine = "$ipRemote`" . get_host($ipRemote) . '`' . date('d/m/Y H:i:s') . "`$useragent`(reflect violater)\n";
+}
 
 /* secs; check interval (best > 5 < 30 secs) (default: 7)
 * Fast Scrapers will make too many accesses during the interval */
@@ -186,7 +204,7 @@ if (file_exists($ipFile)) {
         }
     }
 
-    if (!( // white-list check
+    if (! $props['use_whitelist'] || !( // white-list check
             ipIsInNet($ipRemote, '64.62.128.0/20') or // Gigablast has blocks 64.62.128.0 - 64.62.255.255
             ipIsInNet($ipRemote, '66.154.100.0/22') or // Gigablast has blocks 66.154.100.0 - 66.154.103.255
             ipIsInNet($ipRemote, '64.233.160.0/19') or // Google has blocks 64.233.160.0 - 64.233.191.255
@@ -209,31 +227,9 @@ if (file_exists($ipFile)) {
     )
     ) {
         // $ipRemote is now NOT any of the above
-        /* ************ test for slow scrapers ********** */
-        if (
-            ($bTotVisit > 0) and
-            ($visits >= $bTotVisit)
-        ) {
-            $useragent = (isset(${$_SERVER_ARRAY}['HTTP_USER_AGENT']))
-                    ? ${$_SERVER_ARRAY}['HTTP_USER_AGENT']
-                    : '<unknown user agent>';
-            $wait = ( int )$bStartOver - $duration + 1; // secs
-            header('HTTP/1.0 503 Service Unavailable');
-            header('Content-Type: text/html');
-            header("Retry-After: $wait");
-            header('Content-Type: text/html');
-            $fields = array(
-                'bbx.visits' => $visits,
-                'bbx.duration' => (int)$duration / 3600,
-                'bbx.wait' => (int)($wait / 3600),
-            );
-            $fields['bbx.appeal'] = $showSlowAppeal? $modx->getChunk($appealTpl) : '';
-            echo $modx->getChunk('SlowScraperTpl', $fields);
-
-            $bLogLine = "$ipRemote`" . get_host($ipRemote) . '`' . date('d/m/Y H:i:s') . "`$useragent`(slow scraper)\n";
 
             /* ********* test for fast scrapers *********** */
-        } elseif (
+        if (
             ($visits >= $bMaxVisit) and
             (($visits / $duration) > ($bMaxVisit / $bInterval))
         ) {
@@ -253,8 +249,7 @@ if (file_exists($ipFile)) {
             $fields['bbx.appeal'] = $showFastAppeal? $modx->getChunk($appealTpl) : '';
             echo $modx->getChunk('FastScraperTpl', $fields);
 
-
-            $$bLogLine = "$ipRemote`" . get_host($ipRemote) . '`' . date('d/m/Y H:i:s') . "`$useragent`(fast scraper)\n";
+            $bLogLine = "$ipRemote`" . get_host($ipRemote) . '`' . date('d/m/Y H:i:s') . "`$useragent`(fast scraper)\n";
         }
     } else {
         if ($props['debug']) {

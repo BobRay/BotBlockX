@@ -27,7 +27,8 @@
  */
 
 /* BotBlockX Default Property descriptions */
-
+$_lang['botblockx_reflect_block_desc'] = 'Block bots looking for the reflect snippet. Default: Yes';
+$_lang['botblockx_use_whitelist_desc'] = 'Use whitelist for known good bots. Default: Yes';
 $_lang['botblockx_interval_desc'] = 'Time interval for fast scrapers. Default: 7';
 $_lang['botblockx_max_visits_desc'] = 'Fast scrapers will exceed this value during the interval. Important: *must* be greater than interval. Default: 14 (allows two visits per second in any given 14-second period with the interval set to 7)';
 $_lang['botblockx_penalty_desc'] = 'Penalty (in seconds) for violators; used as a multiplier in determining the wait time for fast scrapers. Default: 60';
@@ -39,3 +40,4 @@ $_lang['botblockx_show_fast_appeal_desc'] = 'Show fast scrapers a message sugges
 $_lang['botblockx_appeal_tpl_desc'] = 'Name of the chunk to use for the appeal. Default: "AppealTpl"';
 $_lang['botblockx_slow_tpl_desc'] = 'Name of the chunk to use for the slow scraper violation message. Default: "SlowScraperTpl"';
 $_lang['botblockx_fast_tpl_desc'] = 'Name of the chunk to use for the fast scraper violation message. Default: "FastScraperTpl"';
+$_lang['botblockx_reflect_message_tpl_desc'] = 'Name of the chunk to use for the reflect violation message. Default: "ReflectMessageTpl"';

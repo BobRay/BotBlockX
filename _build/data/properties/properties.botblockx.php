@@ -21,6 +21,22 @@
 
 $properties = array(
     array(
+        'name' => 'use_whitelist',
+        'desc' => 'botblockx_use_whitelist_desc',
+        'type' => 'combo-boolean',
+        'options' => '',
+        'value' => '1',
+        'lexicon' => 'botblockx:properties',
+    ),
+    array(
+        'name' => 'reflect_block',
+        'desc' => 'botblockx_reflect_block_desc',
+        'type' => 'combo-boolean',
+        'options' => '',
+        'value' => '1',
+        'lexicon' => 'botblockx:properties',
+    ),
+    array(
         'name' => 'interval',
         'desc' => 'botblockx_interval_desc',
         'type' => 'integer',
@@ -128,6 +144,14 @@ $properties = array(
         'type' => 'textfield',
         'options' => '',
         'value' => 'FastScraperTpl',
+        'lexicon' => 'botblockx:properties',
+    ),
+    array(
+        'name' => 'reflect_message_tpl',
+        'desc' => 'botblockx_reflect_message_tpl_desc',
+        'type' => 'textfield',
+        'options' => '',
+        'value' => 'ReflectMessageTpl',
         'lexicon' => 'botblockx:properties',
     ),
  );

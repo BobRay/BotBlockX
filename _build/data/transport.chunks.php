@@ -53,4 +53,12 @@ $chunks[3]->fromArray(array(
     'snippet' => file_get_contents($sources['source_core'].'/elements/chunks/appeal.chunk.tpl'),
     'properties' => '',
 ),'',true,true);
+$chunks[4]= $modx->newObject('modChunk');
+$chunks[4]->fromArray(array(
+    'id' => 4,
+    'name' => 'ReflectMessageTpl',
+    'description' => 'Go Away message for Reflect Violators',
+    'snippet' => file_get_contents($sources['source_core'].'/elements/chunks/reflectmessage.chunk.tpl'),
+    'properties' => '',
+),'',true,true);
 return $chunks;
