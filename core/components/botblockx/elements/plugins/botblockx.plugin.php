@@ -57,7 +57,7 @@ if ($modx->context->get('key') == 'mgr') {
     return '';
 }
 if (!defined('_B_ROOT')) {
-    define('_B_ROOT', MODX_BASE_PATH);
+    define('_B_ROOT', MODX_CORE_PATH);
 }
 if (!defined('_B_DIRECTORY')) {
     define('_B_DIRECTORY', _B_ROOT . 'block/');

@@ -58,8 +58,9 @@ $connectPropertySets = false;
 /* work starts here */
 $success = true;
 
-$blockDir = MODX_BASE_PATH . 'block';
-$logDir = MODX_BASE_PATH . 'log';
+$blockDir = MODX_CORE_PATH . 'block';
+$logDir = MODX_CORE_PATH . 'blocklogs';
+$file = $logFile = $logDir . '/filenotfound.log';
 
 /* empty and remove directory */
 if (!function_exists("rrmdir")) {
@@ -117,6 +118,13 @@ switch($options[xPDOTransport::PACKAGE_ACTION]) {
                 $modx->log(xPDO::LOG_LEVEL_ERROR, "Failed to create directory: $logDir");
             } else {
                 $modx->log(xPDO::LOG_LEVEL_INFO, "Created directory: $logDir");
+                $fp = fopen($logFile, 'w');
+                if ($fp) {
+                    $modx->log(xPDO::LOG_LEVEL_INFO, "Created file: $logFile");
+                    fclose($fp);
+                } else {
+                    $modx->log(xPDO::LOG_LEVEL_ERROR, "Failed to file: $logFile");
+                }
             }
         } else {
             $modx->log(xPDO::LOG_LEVEL_INFO,  $logDir .  " Already exists");
