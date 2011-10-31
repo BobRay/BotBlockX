@@ -45,4 +45,4 @@ $_lang['botblockx_reflect_message_tpl_desc'] = 'Name of the chunk to use for the
 /* LogFileNotFound Property Descriptions */
 
 $_lang['lfnf_verbose_desc'] = 'Standard output is just the path of the not-found file. Verbose output includes the IP and User Agent. Default: No';
-$_lang['lfnf_target_desc'] = 'Determines whether the info will be written to a file (core/blocklogs/filenotfound.log) or to a chunk (FileNotFoundLog. Default: No';
+$_lang['lfnf_target_desc'] = 'Determines whether the info will be written to a file (core/blocklogs/pagenotfound.log) or to a chunk (PageNotFoundLog. Default: FILE';

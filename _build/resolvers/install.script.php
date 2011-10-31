@@ -100,6 +100,19 @@ switch($options[xPDOTransport::PACKAGE_ACTION]) {
                 }
             }
         }
+
+        /* separate section for LogPageNotFound */
+        $plugin = 'LogPageNotFound';
+        $pluginObj = $modx->getObject('modPlugin',array('name'=>$plugin));
+            if (! $pluginObj) {
+                $modx->log(xPDO::LOG_LEVEL_INFO,'cannot get object: ' . $plugin);
+            }else {
+                $modx->log(xPDO::LOG_LEVEL_INFO,'Assigning Events to Plugin ' . $plugin);
+                $intersect = $modx->newObject('modPluginEvent');
+                $intersect->set('event','OnPageNotFound');
+                $intersect->set('pluginid',$pluginObj->get('id'));
+                $intersect->save();
+            }
         
         /* Create log and block directories */
 

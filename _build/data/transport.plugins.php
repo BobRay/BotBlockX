@@ -51,12 +51,13 @@ unset($properties);
 $plugins[2]= $modx->newObject('modplugin');
 $plugins[2]->fromArray(array(
     'id' => 2,
-    'name' => 'LogFileNotFound',
-    'description' => 'Log file-not-found events..',
-    'plugincode' => getPluginContent($sources['source_core'].'/elements/plugins/logfilenotfound.plugin.php'),
+    'name' => 'LogPageNotFound',
+    'description' => 'Log page-not-found events..',
+    'plugincode' => getPluginContent($sources['source_core'].'/elements/plugins/logpagenotfound.plugin.php'),
+    'disabled' => '1',
 ),'',true,true);
-$properties = include $sources['data'].'properties/properties.logfilenotfound.php';
-$plugins[1]->setProperties($properties);
+$properties = include $sources['data'].'properties/properties.logpagenotfound.php';
+$plugins[2]->setProperties($properties);
 unset($properties);
 
 return $plugins;

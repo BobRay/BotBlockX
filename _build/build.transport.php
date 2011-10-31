@@ -150,6 +150,7 @@ if ($hasChunks) { /* add chunks  */
     /* note: Chunks' default properties are set in transport.chunks.php */    
     $chunks = include $sources['data'].'transport.chunks.php';
     if (is_array($chunks)) {
+        $modx->log(modX::LOG_LEVEL_INFO,'Added in chunks (' . count($chunks) .').');
         $category->addMany($chunks, 'Chunks');
     } else { $modx->log(modX::LOG_LEVEL_FATAL,'Adding chunks failed.'); }
 }
