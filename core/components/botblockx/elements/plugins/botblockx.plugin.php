@@ -93,7 +93,7 @@ if (!function_exists("get_host")) {
     }
 }
 $props =& $scriptProperties;
-
+$bLogLine = '';
 $oldSetting = ignore_user_abort(TRUE); // otherwise can screw-up logfile
 
 
@@ -111,7 +111,7 @@ global ${$_SERVER_ARRAY};
 $ipRemote = ${$_SERVER_ARRAY}['REMOTE_ADDR'];
 
 /* Nuke reflect violators up front */
-if (($modx->event->name == 'OnPageNotFound') && $props['reflect_lock'] && stristr($_SERVER['REQUEST_URI'], 'reflect')) {
+if (($modx->event->name == 'OnPageNotFound') && $props['reflect_block'] && stristr($_SERVER['REQUEST_URI'], 'reflect')) {
             $reflectTpl = empty($props['reflect_message_tpl']) ? 'ReflectMessageTpl' : $props['reflect_message_tpl'];
             $useragent = (isset(${$_SERVER_ARRAY}['HTTP_USER_AGENT']))
                     ? ${$_SERVER_ARRAY}['HTTP_USER_AGENT']
@@ -166,7 +166,7 @@ $fastTpl = empty($fastTpl)? 'FastScraperTpl' : $appealTpl;
 $ipLogFile = _L_DIRECTORY . _B_LOGFILE;
 
 $ipFile = '';
-$bLogLine = '';
+
 $bTime = $startTime = $hitsTime = time();
 
 if ($ipLength > 3) {
