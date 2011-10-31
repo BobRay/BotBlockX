@@ -63,7 +63,7 @@ if (!defined('_B_DIRECTORY')) {
     define('_B_DIRECTORY', _B_ROOT . 'block/');
 }
 if (!defined('_B_LOGFILE')) {
-    define('_B_LOGFILE', 'ipblocklog');
+    define('_B_LOGFILE', 'ipblock.log');
 }
 if (!defined('_B_LOGMAXLINES')) {
     define('_B_LOGMAXLINES', 1000);
