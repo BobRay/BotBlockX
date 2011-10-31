@@ -53,10 +53,22 @@ if (!function_exists("my_debug")) {
 }
 
 $data['page'] = htmlentities(strip_tags($_SERVER['REQUEST_URI']));
-$data['ip'] = htmlentities(strip_tags($_SERVER['REMOTE_ADDR']));
-$data['userAgent'] = htmlentities(strip_tags($_SERVER['HTTP_USER_AGENT']));
-$data['host'] = get_host($data['ip']);
-$msg = implode(',', $data);
-my_debug($msg);
+if ($scriptProperties['verbose'] ) {
+    $data['ip'] = htmlentities(strip_tags($_SERVER['REMOTE_ADDR']));
+    $data['userAgent'] = htmlentities(strip_tags($_SERVER['HTTP_USER_AGENT']));
+    $data['host'] = get_host($data['ip']);
+    $msg = implode('`', $data);
+} else {
+    $msg = $data['page'];
+}
+if ($scriptProperties['target'] == 'CHUNK') {
+    my_debug($msg);
+} else {
+    $fp = fopen(MODX_CORE_PATH . 'blocklogs/pagenotfound.log', 'a');
+    if ($fp) {
+        fwrite($fp,$msg . "\n");
+        fclose($fp);
+    }
+}
 
     return '';

@@ -60,7 +60,7 @@ $success = true;
 
 $blockDir = MODX_CORE_PATH . 'block';
 $logDir = MODX_CORE_PATH . 'blocklogs';
-$logFile1 = $logDir . '/filenotfound.log';
+$logFile1 = $logDir . '/pagenotfound.log';
 $logFile2 = $logDir . '/ipblock.log';
 
 /* empty and remove directory */
