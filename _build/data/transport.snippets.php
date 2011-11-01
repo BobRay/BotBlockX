@@ -40,24 +40,12 @@ $snippets = array();
 $snippets[1]= $modx->newObject('modSnippet');
 $snippets[1]->fromArray(array(
     'id' => 1,
-    'name' => 'MySnippet1',
-    'description' => 'MySnippet1 for BotBlockX.',
-    'snippet' => getSnippetContent($sources['source_core'].'/elements/snippets/mysnippet1.snippet.php'),
+    'name' => 'BlockLogReport',
+    'description' => 'BlockLogReport for BotBlockX.',
+    'snippet' => getSnippetContent($sources['source_core'].'/elements/snippets/blocklogreport.snippet.php'),
 ),'',true,true);
-$properties = include $sources['data'].'/properties/properties.mysnippet1.php';
+$properties = include $sources['data'].'/properties/properties.blocklogreport.php';
 $snippets[1]->setProperties($properties);
-unset($properties);
-
-
-$snippets[2]= $modx->newObject('modSnippet');
-$snippets[2]->fromArray(array(
-    'id' => 2,
-    'name' => 'MySnippet2',
-    'description' => 'MySnippet2 for BotBlockX.',
-    'snippet' => getSnippetContent($sources['source_core'].'/elements/snippets/mysnippet2.snippet.php'),
-),'',true,true);
-$properties = include $sources['data'].'/properties/properties.mysnippet2.php';
-$snippets[2]->setProperties($properties);
 unset($properties);
 
 return $snippets;

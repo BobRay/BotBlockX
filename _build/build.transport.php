@@ -40,10 +40,10 @@ define('PKG_CATEGORY','BotBlockX');
  * */
 $hasAssets = false; /* Transfer the files in the assets dir. */
 $hasCore = true;   /* Transfer the files in the core dir. */
-$hasSnippets = false;
+$hasSnippets = true;
 $hasChunks = true;
 $hasTemplates = false;
-$hasResources = false;
+$hasResources = true;
 $hasValidator = true; /* Run a validator before installing anything */
 $hasResolver = true; /* Run a resolver after installing everything */
 $hasSetupOptions = true; /* HTML/PHP script to interact with user */
