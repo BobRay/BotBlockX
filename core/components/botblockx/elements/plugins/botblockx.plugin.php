@@ -121,7 +121,7 @@ if (($modx->event->name == 'OnPageNotFound') && $props['reflect_block'] && stris
             header('Connection: close');
             header('Content-Type: text/html');
             echo $modx->getChunk($reflectTpl);
-            $bLogLine = "$ipRemote`" . get_host($ipRemote) . '`' . date('d/m/Y H:i:s') . "`$useragent`(reflect violater)\n";
+            $bLogLine = "$ipRemote`" . get_host($ipRemote) . '`' . date('d/m/Y H:i:s') . "`$useragent`(reflect violator)\n";
 }
 
 /* secs; check interval (best > 5 < 30 secs) (default: 7)
