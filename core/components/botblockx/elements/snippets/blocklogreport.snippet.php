@@ -32,15 +32,15 @@ $file = MODX_CORE_PATH . '/blocklogs/ipblock.log';
 $fp = fopen ($file, 'r');
 $output = '';
 if ($fp) {
-    $output = '<table class="BlockLog">';
-    $output .= '<th><td>IP</td><td>Host</td><td>Time</td><td>User Agent</td><td>Type</td></th>';
+    $output = '<table class="BlockLog" border="1">';
+    $output .= '<tr><th>IP</th><th>Host</th><th>Time</th><th>User Agent</th><th>Type</th></tr>';
     while (($line = fgets($fp)) !== false) {
         $line = trim($line);
         if (strpos($line,'#' == 0) || empty($line)) continue;
         $lineArray = explode('`',$line);
         $output .= '<tr>';
         foreach($lineArray as $item) {
-            $output .= '<td>$item</td>';
+            $output .= '<td>' . $item . '</td>';
 
         }
         $output .= '</tr>';
@@ -51,3 +51,4 @@ if ($fp) {
     $output = 'Could not open: ' . $file;
 }
 
+return $output;
