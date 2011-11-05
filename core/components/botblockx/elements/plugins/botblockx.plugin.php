@@ -1,5 +1,4 @@
 <?php
-
 /**
  * BotBlockX Plugin
  * Copyright 2011 Bob Ray <http://bobsguides.com>
@@ -122,7 +121,7 @@ if (($modx->event->name == 'OnPageNotFound') && $props['reflect_block'] && stris
             header('Content-Type: text/html');
             echo $modx->getChunk($reflectTpl);
             $t = gettimeofday();
-            $bLogLine = "$ipRemote`" . get_host($ipRemote) . '`' . date('d/m/Y H:i:s:') . substr($t,0,3) . "`$useragent`(reflect violator)\n";
+            $bLogLine = "$ipRemote`" . get_host($ipRemote) . '`' . date('d/m/y H:i:'). substr($t['sec'],-2) . ':' . substr($t['usec'],0,3) . "`$useragent`(reflect violator)\n";
 }
 
 /* secs; check interval (best > 5 < 30 secs) (default: 7)
@@ -249,8 +248,8 @@ if (file_exists($ipFile)) {
             );
             $fields['bbx.appeal'] = $showFastAppeal? $modx->getChunk($appealTpl) : '';
             echo $modx->getChunk('FastScraperTpl', $fields);
-
-            $bLogLine = "$ipRemote`" . get_host($ipRemote) . '`' . date('d/m/Y H:i:s') . "`$useragent`(fast scraper)\n";
+            $t = gettimeofday();
+            $bLogLine = "$ipRemote`" . get_host($ipRemote) . '`' . date('d/m/y H:i:'). substr($t['sec'],-2) . ':' . substr($t['usec'],0,3) . "`$useragent`(fast scraper)\n";
         }
     } else {
         if ($props['debug']) {
