@@ -62,12 +62,5 @@ $chunks[4]->fromArray(array(
     'properties' => '',
 ),'',true,true);
 
-$chunks[5]= $modx->newObject('modChunk');
-$chunks[5]->fromArray(array(
-    'id' => 5,
-    'name' => 'PageNotFoundLog',
-    'description' => 'Log "file" for PageFileNotFound plugin. Data will only be written here if the "target" property is set to "CHUNK"',
-    'snippet' => file_get_contents($sources['source_core'].'/elements/chunks/pagenotfoundlog.chunk.tpl'),
-    'properties' => '',
-),'',true,true);
+
 return $chunks;

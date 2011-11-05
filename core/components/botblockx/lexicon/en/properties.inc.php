@@ -42,7 +42,7 @@ $_lang['botblockx_slow_tpl_desc'] = 'Name of the chunk to use for the slow scrap
 $_lang['botblockx_fast_tpl_desc'] = 'Name of the chunk to use for the fast scraper violation message. Default: "FastScraperTpl"';
 $_lang['botblockx_reflect_message_tpl_desc'] = 'Name of the chunk to use for the reflect violation message. Default: "ReflectMessageTpl"';
 
-/* LogFileNotFound Property Descriptions */
+/* FileNotFoundLogReport Property Descriptions */
 
-$_lang['lfnf_verbose_desc'] = 'Standard output is just the path of the not-found file. Verbose output includes the IP and User Agent. Default: No';
-$_lang['lfnf_target_desc'] = 'Determines whether the info will be written to a file (core/blocklogs/pagenotfound.log) or to a chunk (PageNotFoundLog. Default: FILE';
+$_lang['lfnf_table_width_desc'] = 'Table width for report. Default: 80%';
+$_lang['lfnf_cell_width_desc'] = 'Cell width for report. Default: 30';

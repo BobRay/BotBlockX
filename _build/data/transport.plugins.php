@@ -56,8 +56,8 @@ $plugins[2]->fromArray(array(
     'plugincode' => getPluginContent($sources['source_core'].'/elements/plugins/logpagenotfound.plugin.php'),
     'disabled' => '1',
 ),'',true,true);
-$properties = include $sources['data'].'properties/properties.logpagenotfound.php';
-$plugins[2]->setProperties($properties);
+//$properties = include $sources['data'].'properties/properties.logpagenotfound.php';
+//$plugins[2]->setProperties($properties);
 unset($properties);
 
 return $plugins;

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * LogPageNotFound Plugin
  *
@@ -32,43 +31,24 @@ if (!function_exists("get_host")) {
     }
 }
 
-if (!function_exists("my_debug")) {
-    function my_debug($message, $clear = false) {
-        global $modx;
-
-        $chunk = $modx->getObject('modChunk', array('name' => 'PageNotFoundLog'));
-        if (!$chunk) {
-            $modx->log(xPDO::LOG_LEVEL_ERROR, 'LogPageNotFound failed to retrieve the PageNotFoundLog chunk');
-        } else {
-            if ($clear) {
-                $content = '';
-            } else {
-                $content = $chunk->getContent();
-            }
-        }
-        $content .= $message . "\n";
-        $chunk->setContent($content);
-        $chunk->save();
-    }
-}
-
 $data['page'] = htmlentities(strip_tags($_SERVER['REQUEST_URI']));
-if ($scriptProperties['verbose'] ) {
-    $data['ip'] = htmlentities(strip_tags($_SERVER['REMOTE_ADDR']));
-    $data['userAgent'] = htmlentities(strip_tags($_SERVER['HTTP_USER_AGENT']));
-    $data['host'] = get_host($data['ip']);
-    $msg = implode('`', $data);
+$t = gettimeofday();
+$data['time'] = date('d/m/y H:i:s:') . substr($t['usec'],0,3); // H:i:s:u
+$data['ip'] = htmlentities(strip_tags($_SERVER['REMOTE_ADDR']));
+$data['userAgent'] = htmlentities(strip_tags($_SERVER['HTTP_USER_AGENT']));
+$data['host'] = get_host($data['ip']);
+$data['referer'] = empty($_SERVER['HTTP_REFERER'])? '(empty)' : $_SERVER['HTTP_REFERER'];
+
+$msg = implode('`', $data);
+
+$file = MODX_CORE_PATH . 'blocklogs/pagenotfound.log';
+$fp = fopen($file, 'a');
+if ($fp) {
+    fwrite($fp,$msg . "\n");
+    fclose($fp);
 } else {
-    $msg = $data['page'];
+    die('Could not open file: ' . $file);
 }
-if ($scriptProperties['target'] == 'CHUNK') {
-    my_debug($msg);
-} else {
-    $fp = fopen(MODX_CORE_PATH . 'blocklogs/pagenotfound.log', 'a');
-    if ($fp) {
-        fwrite($fp,$msg . "\n");
-        fclose($fp);
-    }
-}
+
 
     return '';
