@@ -23,32 +23,44 @@
 
 
 if (!function_exists("get_host")) {
-    function get_host($ip){
-            $ptr = implode(".",array_reverse(explode(".",$ip))).".in-addr.arpa";
-            $host = dns_get_record($ptr,DNS_PTR);
-            if ($host == null) return $ip;
-            else return $host[0]['target'];
+    function get_host($ip)
+    {
+        $ptr = implode(".", array_reverse(explode(".", $ip))) . ".in-addr.arpa";
+        $host = dns_get_record($ptr, DNS_PTR);
+        if ($host == null) {
+            return $ip;
+        }
+        else {
+            return $host[0]['target'];
+        }
     }
 }
-
-$data['page'] = htmlentities(strip_tags($_SERVER['REQUEST_URI']));
+/* Don't execute in Manager */
+if ($modx->context->get('key') == 'mgr') {
+    return '';
+}
+$oldSetting = ignore_user_abort( TRUE );   // otherwise can screw-up logfile
+$data['page'] = $_SERVER['REQUEST_URI'];
 $t = gettimeofday();
-$data['time'] = date('d/m/y H:i:s:') . substr($t['usec'],0,3); // H:i:s:u
-$data['ip'] = htmlentities(strip_tags($_SERVER['REMOTE_ADDR']));
-$data['userAgent'] = htmlentities(strip_tags($_SERVER['HTTP_USER_AGENT']));
+$data['time'] = date('d/m/y H:i:s:') . substr($t['usec'], 0, 3); // H:i:s:u
+$data['ip'] = $_SERVER['REMOTE_ADDR'];
+$data['userAgent'] = isset($_SERVER['HTTP_USER_AGENT'])
+            ? $_SERVER['HTTP_USER_AGENT']
+            : '<unknown user agent>';
+
 $data['host'] = get_host($data['ip']);
-$data['referer'] = empty($_SERVER['HTTP_REFERER'])? '(empty)' : $_SERVER['HTTP_REFERER'];
+$data['referer'] = empty($_SERVER['HTTP_REFERER']) ? '(empty)' : $_SERVER['HTTP_REFERER'];
 
 $msg = implode('`', $data);
 
 $file = MODX_CORE_PATH . 'blocklogs/pagenotfound.log';
 $fp = fopen($file, 'a');
 if ($fp) {
-    fwrite($fp,$msg . "\n");
+    fwrite($fp, $msg . "\n");
     fclose($fp);
 } else {
     die('Could not open file: ' . $file);
 }
+ignore_user_abort($oldSetting);
 
-
-    return '';
+return '';

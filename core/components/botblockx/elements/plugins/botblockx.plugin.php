@@ -95,19 +95,7 @@ $props =& $scriptProperties;
 $bLogLine = '';
 $oldSetting = ignore_user_abort(TRUE); // otherwise can screw-up logfile
 
-
-
-if (!empty($GLOBALS['_SERVER'])) {
-    $_SERVER_ARRAY = '_SERVER';
-} elseif (!empty($GLOBALS['HTTP_SERVER_VARS'])) {
-    $_SERVER_ARRAY = 'HTTP_SERVER_VARS';
-} else {
-    $_SERVER_ARRAY = 'GLOBALS';
-}
-
-global ${$_SERVER_ARRAY};
-
-$ipRemote = ${$_SERVER_ARRAY}['REMOTE_ADDR'];
+$ipRemote = $_SERVER['REMOTE_ADDR'];
 
 /* secs; check interval (best > 5 < 30 secs) (default: 7)
 * Fast Scrapers will make too many accesses during the interval */
@@ -221,8 +209,8 @@ if (file_exists($ipFile)) {
             $startTime = $bTime;
             $hitsTime = $bTime + (($bMaxVisit * $bPenalty) / $bInterval);
             $wait = ( int )$hitsTime - $startTime + 1;
-            $useragent = (isset(${$_SERVER_ARRAY}['HTTP_USER_AGENT']))
-                    ? htmlentities(strip_tage(${$_SERVER_ARRAY}['HTTP_USER_AGENT']))
+            $useragent = (isset($_SERVER['HTTP_USER_AGENT']))
+                    ? $_SERVER['HTTP_USER_AGENT']
                     : '<unknown user agent>';
             @header('HTTP/1.0 503 Service Unavailable');
             @header("Status: 503 Service Temporarily Unavailable");
@@ -242,7 +230,7 @@ if (file_exists($ipFile)) {
         }
     } else {
         if ($props['debug']) {
-            my_debug('Visit from good bot: ' . ${$_SERVER_ARRAY}['HTTP_USER_AGENT']);
+            my_debug('Visit from good bot: ' . $_SERVER['HTTP_USER_AGENT']);
         }
     } /* end of bot-testing */
 

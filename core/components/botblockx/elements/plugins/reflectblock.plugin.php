@@ -44,20 +44,11 @@ if ($modx->context->get('key') == 'mgr') {
 }
 
 if (stristr($_SERVER['REQUEST_URI'], 'reflect')) {
-
-    if (!empty($GLOBALS['_SERVER'])) {
-        $_SERVER_ARRAY = '_SERVER';
-    } elseif (!empty($GLOBALS['HTTP_SERVER_VARS'])) {
-        $_SERVER_ARRAY = 'HTTP_SERVER_VARS';
-    } else {
-        $_SERVER_ARRAY = 'GLOBALS';
-    }
-    global ${$_SERVER_ARRAY};
-
-    $ipRemote = htmlentities(strip_tags($_SERVER['REMOTE_ADDR']));
+    $oldSetting = ignore_user_abort( TRUE );   // otherwise can screw-up logfile
+    $ipRemote = $_SERVER['REMOTE_ADDR'];
     $reflectTpl = empty($props['reflect_message_tpl']) ? 'ReflectMessageTpl' : $props['reflect_message_tpl'];
-    $useragent = isset(${$_SERVER_ARRAY}['HTTP_USER_AGENT'])
-            ? htmlentities(strip_tags(${$_SERVER_ARRAY}['HTTP_USER_AGENT']))
+    $useragent = isset($_SERVER['HTTP_USER_AGENT'])
+            ? $_SERVER['HTTP_USER_AGENT']
             : '<unknown user agent>';
 
     @header('HTTP/1.0 503 Service Unavailable');
@@ -78,6 +69,7 @@ if (stristr($_SERVER['REQUEST_URI'], 'reflect')) {
     } else {
         die('Could not open file: ' . $file);
     }
+    ignore_user_abort($oldSetting);
     exit();
 } else {
     return '';
