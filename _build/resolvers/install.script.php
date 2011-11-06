@@ -97,7 +97,7 @@ switch($options[xPDOTransport::PACKAGE_ACTION]) {
                         $intersect = $modx->newObject('modPluginEvent');
                         $intersect->set('event',$event);
                         $intersect->set('pluginid',$pluginObj->get('id'));
-                        $intersect->set('priority',3);
+                        $intersect->set('priority',0);
                         $intersect->save();
                     }
                 }
