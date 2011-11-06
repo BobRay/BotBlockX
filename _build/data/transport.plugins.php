@@ -41,7 +41,7 @@ $plugins[1]= $modx->newObject('modplugin');
 $plugins[1]->fromArray(array(
     'id' => 1,
     'name' => 'BotBlockX',
-    'description' => 'BotBlockX plugin stops bad bots from hammering your site.',
+    'description' => 'BotBlockX plugin stops bad bots from hammering your site',
     'plugincode' => getPluginContent($sources['source_core'].'/elements/plugins/botblockx.plugin.php'),
 ),'',true,true);
 $properties = include $sources['data'].'properties/properties.botblockx.php';
@@ -52,12 +52,24 @@ $plugins[2]= $modx->newObject('modplugin');
 $plugins[2]->fromArray(array(
     'id' => 2,
     'name' => 'LogPageNotFound',
-    'description' => 'Log page-not-found events..',
+    'description' => 'Log page-not-found events',
     'plugincode' => getPluginContent($sources['source_core'].'/elements/plugins/logpagenotfound.plugin.php'),
     'disabled' => '1',
 ),'',true,true);
 //$properties = include $sources['data'].'properties/properties.logpagenotfound.php';
 //$plugins[2]->setProperties($properties);
+$plugins[3]= $modx->newObject('modplugin');
+$plugins[3]->fromArray(array(
+    'id' => 3,
+    'name' => 'ReflectBlock',
+    'description' => 'Block requests containing the word reflect',
+    'plugincode' => getPluginContent($sources['source_core'].'/elements/plugins/reflectblock.plugin.php'),
+    'disabled' => '1',
+),'',true,true);
+//$properties = include $sources['data'].'properties/properties.reflectblock.php';
+//$plugins[3]->setProperties($properties);
+
+
 unset($properties);
 
 return $plugins;

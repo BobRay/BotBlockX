@@ -109,24 +109,6 @@ global ${$_SERVER_ARRAY};
 
 $ipRemote = ${$_SERVER_ARRAY}['REMOTE_ADDR'];
 
-/* Nuke reflect violators up front */
-if (($modx->event->name == 'OnPageNotFound') && $props['reflect_block'] && stristr($_SERVER['REQUEST_URI'], 'reflect')) {
-            $reflectTpl = empty($props['reflect_message_tpl']) ? 'ReflectMessageTpl' : $props['reflect_message_tpl'];
-            $useragent = (isset(${$_SERVER_ARRAY}['HTTP_USER_AGENT']))
-                    ? ${$_SERVER_ARRAY}['HTTP_USER_AGENT']
-                    : '<unknown user agent>';
-            @header('HTTP/1.0 503 Service Unavailable');
-            @header("Status: 503 Service Temporarily Unavailable");
-            header("Retry-After: 86400");
-            header('Server: ');
-            header('X-Powered-By: ');
-            header('Connection: close');
-            header('Content-Type: text/html');
-            echo $modx->getChunk($reflectTpl);
-            $t = gettimeofday();
-            $bLogLine = "$ipRemote`" . get_host($ipRemote) . '`' . date('d/m/y H:i:'). substr($t['sec'],-2) . ':' . substr($t['usec'],0,3) . "`$useragent`(reflect violator)\n";
-}
-
 /* secs; check interval (best > 5 < 30 secs) (default: 7)
 * Fast Scrapers will make too many accesses during the interval */
 $bInterval = empty($props['interval']) ? 7 : $props['interval'];
@@ -240,7 +222,7 @@ if (file_exists($ipFile)) {
             $hitsTime = $bTime + (($bMaxVisit * $bPenalty) / $bInterval);
             $wait = ( int )$hitsTime - $startTime + 1;
             $useragent = (isset(${$_SERVER_ARRAY}['HTTP_USER_AGENT']))
-                    ? ${$_SERVER_ARRAY}['HTTP_USER_AGENT']
+                    ? htmlentities(strip_tage(${$_SERVER_ARRAY}['HTTP_USER_AGENT']))
                     : '<unknown user agent>';
             @header('HTTP/1.0 503 Service Unavailable');
             @header("Status: 503 Service Temporarily Unavailable");
@@ -255,7 +237,8 @@ if (file_exists($ipFile)) {
             $fields['bbx.appeal'] = $showFastAppeal? $modx->getChunk($appealTpl) : '';
             echo $modx->getChunk('FastScraperTpl', $fields);
             $t = gettimeofday();
-            $bLogLine = "$ipRemote`" . get_host($ipRemote) . '`' . date('d/m/y H:i:'). substr($t['sec'],-2) . ':' . substr($t['usec'],0,3) . "`$useragent`(fast scraper)\n";
+            $bLogLine = $ipRemote . '`' . get_host($ipRemote) . '`' . date('d/m/y H:i:'). substr($t['sec'],-2) . ':' . substr($t['usec'],0,3) . '`' . $useragent . "`(fast scraper)\n";
+
         }
     } else {
         if ($props['debug']) {

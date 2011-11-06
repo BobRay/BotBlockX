@@ -44,7 +44,7 @@ $modx =& $object->xpdo;
 
 /* Connecting plugins to the appropriate system events is done here. */
 
-$pluginEvents = array('OnPageNotFound', 'OnHandleRequest');
+$pluginEvents = array('OnHandleRequest');
 $plugins = array('BotBlockX');
 
 $category = 'BotBlockX';
@@ -59,9 +59,10 @@ $connectPropertySets = false;
 $success = true;
 
 $blockDir = MODX_CORE_PATH . 'block';
-$logDir = MODX_CORE_PATH . 'blocklogs';
-$logFile1 = $logDir . '/pagenotfound.log';
-$logFile2 = $logDir . '/ipblock.log';
+$logDir = MODX_CORE_PATH . 'blocklogs/';
+$logFile1 = $logDir . 'pagenotfound.log';
+$logFile2 = $logDir . 'ipblock.log';
+$logFile3 = $logDir . 'reflctblock.log';
 
 /* empty and remove directory */
 if (!function_exists("rrmdir")) {
@@ -96,6 +97,7 @@ switch($options[xPDOTransport::PACKAGE_ACTION]) {
                         $intersect = $modx->newObject('modPluginEvent');
                         $intersect->set('event',$event);
                         $intersect->set('pluginid',$pluginObj->get('id'));
+                        $intersect->set('priority',3);
                         $intersect->save();
                     }
                 }
@@ -112,6 +114,21 @@ switch($options[xPDOTransport::PACKAGE_ACTION]) {
                 $intersect = $modx->newObject('modPluginEvent');
                 $intersect->set('event','OnPageNotFound');
                 $intersect->set('pluginid',$pluginObj->get('id'));
+                $intersect->set('priority',5);
+                $intersect->save();
+            }
+
+        /* separate section for ReflectBlock */
+        $plugin = 'ReflectBlock';
+        $pluginObj = $modx->getObject('modPlugin',array('name'=>$plugin));
+            if (! $pluginObj) {
+                $modx->log(xPDO::LOG_LEVEL_INFO,'cannot get object: ' . $plugin);
+            }else {
+                $modx->log(xPDO::LOG_LEVEL_INFO,'Assigning Events to Plugin ' . $plugin);
+                $intersect = $modx->newObject('modPluginEvent');
+                $intersect->set('event','OnPageNotFound');
+                $intersect->set('pluginid',$pluginObj->get('id'));
+                $intersect->set('priority',0);
                 $intersect->save();
             }
         
@@ -137,14 +154,21 @@ switch($options[xPDOTransport::PACKAGE_ACTION]) {
                     $modx->log(xPDO::LOG_LEVEL_INFO, "Created file: $logFile1");
                     fclose($fp);
                 } else {
-                    $modx->log(xPDO::LOG_LEVEL_ERROR, "Failed to file: $logFile1");
+                    $modx->log(xPDO::LOG_LEVEL_ERROR, "Failed to create file: $logFile1");
                 }
                 $fp = fopen($logFile2, 'w');
                 if ($fp) {
                     $modx->log(xPDO::LOG_LEVEL_INFO, "Created file: $logFile2");
                     fclose($fp);
                 } else {
-                    $modx->log(xPDO::LOG_LEVEL_ERROR, "Failed to file: $logFile2");
+                    $modx->log(xPDO::LOG_LEVEL_ERROR, "Failed to create file: $logFile2");
+                }
+                $fp = fopen($logFile3, 'w');
+                if ($fp) {
+                    $modx->log(xPDO::LOG_LEVEL_INFO, "Created file: $logFile3");
+                    fclose($fp);
+                } else {
+                    $modx->log(xPDO::LOG_LEVEL_ERROR, "Failed to create file: $logFile3");
                 }
             }
         } else {
