@@ -115,8 +115,11 @@ if (($modx->event->name == 'OnPageNotFound') && $props['reflect_block'] && stris
             $useragent = (isset(${$_SERVER_ARRAY}['HTTP_USER_AGENT']))
                     ? ${$_SERVER_ARRAY}['HTTP_USER_AGENT']
                     : '<unknown user agent>';
-            header('HTTP/1.0 503 Service Unavailable');
+            @header('HTTP/1.0 503 Service Unavailable');
+            @header("Status: 503 Service Temporarily Unavailable");
             header("Retry-After: 86400");
+            header('Server: ');
+            header('X-Powered-By: ');
             header('Connection: close');
             header('Content-Type: text/html');
             echo $modx->getChunk($reflectTpl);
@@ -239,8 +242,11 @@ if (file_exists($ipFile)) {
             $useragent = (isset(${$_SERVER_ARRAY}['HTTP_USER_AGENT']))
                     ? ${$_SERVER_ARRAY}['HTTP_USER_AGENT']
                     : '<unknown user agent>';
-            header('HTTP/1.0 503 Service Unavailable');
+            @header('HTTP/1.0 503 Service Unavailable');
+            @header("Status: 503 Service Temporarily Unavailable");
             header("Retry-After: $wait");
+            header('Server: ');
+            header('X-Powered-By: ');
             header('Connection: close');
             header('Content-Type: text/html');
             $fields = array(
