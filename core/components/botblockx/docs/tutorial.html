@@ -37,14 +37,18 @@ Crawl-Delay: 90
 
 <h3>Installing BotBlockX</h3>
 
-<p>Go to System | Package Management and click on the &quot;Download Extras&quot; button. Put &quot;BotBlockX&quot; in the search box and press &quot;Enter&quot;. Click on the &quot;Download&quot; button next to BotBlockX on the right side of the grid. Wait until the &quot;Download&quot; button changes to &quot;Downloaded&quot; and click on the &quot;Finish&quot; button. The BotBlockX package should appear in the Package Manager grid. Clock on the &quot;Install&quot; button and respond to the forms presented. That's it. Once the install finishes, bot-blocking will begin immediately. The LogPageNotFound plugin and the ReflectBlock plugin will be installed, but these are disabled by default. You'll also get the three snippet/resource pairs that will let you view the logs created by the three plugins.</p>
+<p>Go to System | Package Management and click on the &quot;Download Extras&quot; button. Put &quot;BotBlockX&quot; in the search box and press &quot;Enter&quot;. Click on the &quot;Download&quot; button next to BotBlockX on the right side of the grid. Wait until the &quot;Download&quot; button changes to &quot;Downloaded&quot; and click on the &quot;Finish&quot; button.</p>
+
+<p>The BotBlockX package should appear in the Package Manager grid. Clock on the &quot;Install&quot; button and respond to the forms presented. That's it. Once the install finishes, bot-blocking will begin immediately. The LogPageNotFound plugin and the ReflectBlock plugin will be installed, but these are disabled by default. You'll also get the three snippet/resource pairs that will let you view the logs created by the three plugins.</p>
 
 <p>Some servers do not have both the fileatime() and filemtime() functions enabled. The BotBlockX package performs a test for this during the install and aborts the install if both functions are not working correctly. If that happens, you'll see a message telling you about it and will have to talk things over with your host.</p>
 
 <p>Another possible issue is that some servers reset the access time of all files when doing their daily backups (usually around 2:30 a.m.) If this is the case, some visitors may be blocked for a short period after the backup. I think that most servers don't do this, but if yours does, there is a fix for it in the comments of the code at Alex's site.</p>
 
 <h3>BotBlockXLog</h3>
-<p>When a bot is blocked, an entry is written to the ipblock.log file (inside the blocklogs/ directory below the MODX core directory). The log entry will the IP, host name, date/time, useragent, and the the type of scraper (slow or fast). The fields are separated by back-ticks. Remember that there will be an entry for every request made by a blocked bot, so there will be a lot of duplicates, especially with stupid fast scrapers. The log is limited to 1,000 entries (otherwise it would be monstrous). New entries will be added at the top and old ones will scroll off the bottom. </p>
+<p>When a bot is blocked, an entry is written to the ipblock.log file (inside the blocklogs/ directory below the MODX core directory). The log entry will the IP, host name, date/time, useragent, and the the type of scraper (slow or fast). The fields are separated by back-ticks.</p>
+
+<p>Remember that there will be an entry for every request made by a blocked bot, so there will be a lot of duplicates, especially with stupid fast scrapers. The log is limited to 1,000 entries (otherwise it would be monstrous). New entries will be added at the top and old ones will scroll off the bottom. </p>
 
 <h3>Properties</h3>
 
