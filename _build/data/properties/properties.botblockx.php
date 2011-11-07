@@ -9,15 +9,7 @@
  * @subpackage build
  */
 
-/* These are example properties.
- * The description fields should match
- * keys in the lexicon property file
- *
- * Change plugin1, plugin2 to the name of your plugin.
- * Change property1 to the name of the property.
- * */
-
-/* ToDo: Create default properties and property descriptions */
+/* ToDo: remove some of these */
 
 $properties = array(
     array(
