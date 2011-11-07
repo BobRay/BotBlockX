@@ -12,7 +12,7 @@
 $properties = array(
     array(
         'name' => 'table_width',
-        'desc' => 'lfnf_table_width_desc',
+        'desc' => 'lpnf_table_width_desc',
         'type' => 'integer',
         'options' => '',
         'value' => '80%',
@@ -20,7 +20,7 @@ $properties = array(
     ),
     array(
         'name' => 'cell_width',
-        'desc' => 'lfnf_dell_width_desc',
+        'desc' => 'lpnf_cell_width_desc',
         'type' => 'textfield',
         'options' => '',
         'value' => '30',

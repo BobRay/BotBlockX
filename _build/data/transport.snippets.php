@@ -66,8 +66,8 @@ $snippets[3]->fromArray(array(
     'description' => 'ReflectBlockLogReport snippet for BotBlockX.',
     'snippet' => getSnippetContent($sources['source_core'].'/elements/snippets/reflectblocklogreport.snippet.php'),
 ),'',true,true);
-//$properties = include $sources['data'].'/properties/properties.pagenotfoundlogreport.php';
-//$snippets[3]->setProperties($properties);
+$properties = include $sources['data'].'/properties/properties.reflectblocklogreport.php';
+$snippets[3]->setProperties($properties);
 
 
 unset($properties);

@@ -44,5 +44,11 @@ $_lang['botblockx_reflect_message_tpl_desc'] = 'Name of the chunk to use for the
 
 /* FileNotFoundLogReport Property Descriptions */
 
-$_lang['lfnf_table_width_desc'] = 'Table width for report. Default: 80%';
-$_lang['lfnf_cell_width_desc'] = 'Cell width for report. Default: 30';
+$_lang['lpnf_table_width_desc'] = 'Table width for report. Default: 80%';
+$_lang['lpnf_cell_width_desc'] = 'Cell width for report. Default: 30';
+
+
+/* ReflectBlockLogReport Property Descriptions */
+
+$_lang['rblr_table_width_desc'] = 'Table width for report. Default: 80%';
+$_lang['rblr_cell_width_desc'] = 'Cell width for report. Default: 30';

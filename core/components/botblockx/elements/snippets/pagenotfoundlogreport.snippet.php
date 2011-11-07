@@ -28,7 +28,7 @@
 
 
 $file = MODX_CORE_PATH . '/blocklogs/pagenotfound.log';
-$cellWidth = empty($scriptProperties['cell_width'])? 25 : $scriptProperties['cell_width'];
+$cellWidth = empty($scriptProperties['cell_width'])? 30 : $scriptProperties['cell_width'];
 $tableWidth = empty($scriptProperties['table_width'])? '80%' : $scriptProperties['table_width'];
 $fp = fopen ($file, 'r');
 $output = '';

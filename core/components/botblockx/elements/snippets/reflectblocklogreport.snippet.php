@@ -27,12 +27,17 @@
 /* Modified: November 5, 2011 */
 
 
+/* ToDo: Allow compressed report, sorted by IP, with one entry per IP and # of hits */
+
 $file = MODX_CORE_PATH . '/blocklogs/reflctblock.log';
-/* ToDo: Add table_width and cell_width properties */
+
+$cellWidth = empty($scriptProperties['cell_width'])? 30 : $scriptProperties['cell_width'];
+$tableWidth = empty($scriptProperties['table_width'])? '80%' : $scriptProperties['table_width'];
+
 $fp = fopen ($file, 'r');
 $output = '';
 if ($fp) {
-    $output = '<table class="BlockLog" border="1">';
+    $output = '<table class="BlockLog" border="1" cellpadding="10" width="' . $tableWidth .  '">';
     $output .= '<tr><th>IP</th><th>Host</th><th>Time</th><th>User Agent</th><th>Type</th></tr>';
     while (($line = fgets($fp)) !== false) {
         $line = trim($line);
@@ -40,8 +45,7 @@ if ($fp) {
         $lineArray = explode('`',$line);
         $output .= '<tr>';
         foreach($lineArray as $item) {
-            $output .= '<td>' . $item . '</td>';
-
+            $output .= '<td style="word-break:break-all;" width = "' . $cellWidth . '">' . $item . '</td>';
         }
         $output .= '</tr>';
     }
