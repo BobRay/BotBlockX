@@ -13,7 +13,7 @@ $properties = array(
     array(
         'name' => 'table_width',
         'desc' => 'lpnf_table_width_desc',
-        'type' => 'integer',
+        'type' => 'textfield',
         'options' => '',
         'value' => '80%',
         'lexicon' => 'botblockx:properties',

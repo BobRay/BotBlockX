@@ -44,9 +44,9 @@ $snippets[1]->fromArray(array(
     'description' => 'BlockLogReport snippet for BotBlockX.',
     'snippet' => getSnippetContent($sources['source_core'].'/elements/snippets/blocklogreport.snippet.php'),
 ),'',true,true);
-//$properties = '';
+$properties = include $sources['data'].'/properties/properties.blocklogreport.php';
+$snippets[1]->setProperties($properties);
 
-//$snippets[1]->setProperties($properties);
 
 $snippets[2]= $modx->newObject('modSnippet');
 $snippets[2]->fromArray(array(

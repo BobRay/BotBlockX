@@ -1,59 +1,29 @@
 <?php
 
 /**
- * Default properties for the BlockLogReport snippet
+ * Default properties for the Block Log Report snippet
  * @author Bob Ray <http://bobsguides.com>
- * 10/12/2011
+ * 10/31/2011
  *
  * @package botblockx
  * @subpackage build
  */
 
-
 $properties = array(
     array(
-        'name' => 'property1',
-        'desc' => 'botblockx_property1_desc',
-        'type' => 'combo-boolean',
-        'options' => '',
-        'value' => '1',
-        'lexicon' => 'botblockx:properties',
-    ),
-     array(
-        'name' => 'property2',
-        'desc' => 'botblockx_property2_desc',
+        'name' => 'table_width',
+        'desc' => 'blr_table_width_desc',
         'type' => 'textfield',
         'options' => '',
-        'value' => 'Some Text',
+        'value' => '80%',
         'lexicon' => 'botblockx:properties',
     ),
     array(
-        'name' => 'property3',
-        'desc' => 'botblockx_property3_desc',
-        'type' => 'list',
-        'options' => array(
-            array(
-                'name' => 'System Default',
-                'value' => 'System Default',
-                'menu' => '',
-            ),
-            array(
-                'name' => 'Yes',
-                'value' => 'Yes',
-                'menu' => '',
-            ),
-            array(
-                'name' => 'No',
-                'value' => 'No',
-                'menu' => '',
-            ),
-            array(
-                'name' => 'Parent',
-                'value' => 'Parent',
-                'menu' => '',
-            ),
-        ),
-        'value' => 'System Default',
+        'name' => 'cell_width',
+        'desc' => 'blr_cell_width_desc',
+        'type' => 'textfield',
+        'options' => '',
+        'value' => '30',
         'lexicon' => 'botblockx:properties',
     ),
  );

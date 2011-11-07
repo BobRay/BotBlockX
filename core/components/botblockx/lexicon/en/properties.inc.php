@@ -52,3 +52,8 @@ $_lang['lpnf_cell_width_desc'] = 'Cell width for report. Default: 30';
 
 $_lang['rblr_table_width_desc'] = 'Table width for report. Default: 80%';
 $_lang['rblr_cell_width_desc'] = 'Cell width for report. Default: 30';
+
+/* BlockLogReport Property Descriptions */
+
+$_lang['blr_table_width_desc'] = 'Table width for report. Default: 80%';
+$_lang['blr_cell_width_desc'] = 'Cell width for report. Default: 30';
