@@ -41,7 +41,6 @@ define('PKG_CATEGORY','BotBlockX');
 $hasAssets = false; /* Transfer the files in the assets dir. */
 $hasCore = true;   /* Transfer the files in the core dir. */
 $hasSnippets = true;
-$hasChunks = true;
 $hasResources = true;
 $hasValidator = true; /* Run a validator before installing anything */
 $hasResolver = true; /* Run a resolver after installing everything */
@@ -120,17 +119,6 @@ if ($hasSnippets) {
     } else { $modx->log(modX::LOG_LEVEL_FATAL,'Adding snippets failed.'); }
 }
 
-
-if ($hasChunks) { /* add chunks  */
-    $modx->log(modX::LOG_LEVEL_INFO,'Adding in chunks.');
-    /* note: Chunks' default properties are set in transport.chunks.php */    
-    $chunks = include $sources['data'].'transport.chunks.php';
-    if (is_array($chunks)) {
-        $modx->log(modX::LOG_LEVEL_INFO,'Added in chunks (' . count($chunks) .').');
-        $category->addMany($chunks, 'Chunks');
-    } else { $modx->log(modX::LOG_LEVEL_FATAL,'Adding chunks failed.'); }
-}
-
 if ($hasPlugins) {
     $modx->log(modX::LOG_LEVEL_INFO,'Adding in Plugins.');
     $plugins = include $sources['data'] . 'transport.plugins.php';
@@ -155,14 +143,6 @@ if ($hasValidator) {
 
 if ($hasSnippets) {
     $attr[xPDOTransport::RELATED_OBJECT_ATTRIBUTES]['Snippets'] = array(
-            xPDOTransport::PRESERVE_KEYS => false,
-            xPDOTransport::UPDATE_OBJECT => true,
-            xPDOTransport::UNIQUE_KEY => 'name',
-        );
-}
-
-if ($hasChunks) {
-    $attr[xPDOTransport::RELATED_OBJECT_ATTRIBUTES]['Chunks'] = array(
             xPDOTransport::PRESERVE_KEYS => false,
             xPDOTransport::UPDATE_OBJECT => true,
             xPDOTransport::UNIQUE_KEY => 'name',

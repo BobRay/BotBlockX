@@ -84,11 +84,16 @@ if (!function_exists("ipIsInNet")) {
 }
 
 if (!function_exists("get_host")) {
-    function get_host($ip){
-            $ptr= implode(".",array_reverse(explode(".",$ip))).".in-addr.arpa";
-            $host = dns_get_record($ptr,DNS_PTR);
-            if ($host == null) return $ip;
-            else return $host[0]['target'];
+    function get_host($ip)
+    {
+        $ptr = implode(".", array_reverse(explode(".", $ip))) . ".in-addr.arpa";
+        $host = dns_get_record($ptr, DNS_PTR);
+        if ($host == null) {
+            return $ip;
+        }
+        else {
+            return $host[0]['target'];
+        }
     }
 }
 $props =& $scriptProperties;
@@ -97,16 +102,16 @@ $oldSetting = ignore_user_abort(TRUE); // otherwise can screw-up logfile
 
 $ipRemote = $_SERVER['REMOTE_ADDR'];
 
-/* ToDo: Speed this up and remove some properties */
+
 /* secs; check interval (best > 5 < 30 secs) (default: 7)
 * Fast Scrapers will make too many accesses during the interval */
-$bInterval = empty($props['interval']) ? 7 : $props['interval'];
+$bInterval = 7;
 
 /* Max visits allowed within $bInterval (MUST be > $bInterval) Default: 14 */
-$bMaxVisit = empty($props['max_visits']) ? 14 : $props['max_visits'];
+$bMaxVisit = 14;
 
 /* Seconds before visitor is allowed back; Default: 60 */
-$bPenalty = empty($props['penalty']) ? 60 : $props['penalty'];
+$bPenalty = 60;
 
 /* For slow scrapers, tot visits allowed within $bStartOver.
 *  Set to `none` to disable slow-scraper block (default 1500)
@@ -124,17 +129,6 @@ $ipLength = empty($props['ip_length']) ? 3 : $props['ip_length'];
 
 /* Specify whether warnings will contain a message about appealing via
  * the contact page */
-$showFastAppeal = @$props['show_fast_appeal'];
-$showSlowAppeal = @$props['show_slow_appeal'];
-
-/* Set Tpl chunk names */
-$appealTpl = $modx->getOption('appeal_tpl',$props,null);
-$appealTpl = empty($appealTpl)? 'AppealTpl' : $appealTpl;
-$slowTpl = $modx->getOption('slow_tpl', $props, null);
-$slowTpl = empty($slowTpl)? 'SlowScraperTpl' : $appealTpl;
-$fastTpl = $modx->getOption('fast_tpl', $props, null);
-$fastTpl = empty($fastTpl)? 'FastScraperTpl' : $appealTpl;
-
 
 /* path to log file */
 $ipLogFile = _L_DIRECTORY . _B_LOGFILE;
@@ -178,7 +172,7 @@ if (file_exists($ipFile)) {
         }
     }
 
-    if (! $props['use_whitelist'] || !( // white-list check
+    if (!$props['use_whitelist'] || !( // white-list check
             ipIsInNet($ipRemote, '64.62.128.0/20') or // Gigablast has blocks 64.62.128.0 - 64.62.255.255
             ipIsInNet($ipRemote, '66.154.100.0/22') or // Gigablast has blocks 66.154.100.0 - 66.154.103.255
             ipIsInNet($ipRemote, '64.233.160.0/19') or // Google has blocks 64.233.160.0 - 64.233.191.255
@@ -201,9 +195,27 @@ if (file_exists($ipFile)) {
     )
     ) {
         // $ipRemote is now NOT any of the above
+        // test for slow scrapers
+        if (
+            ($bTotVisit > 0) and
+            ($visits >= $bTotVisit)
+        ) {
+            $useragent = isset($_SERVER['HTTP_USER_AGENT'])
+                    ? $_SERVER['HTTP_USER_AGENT']
+                    : '<unknown user agent>';
+            $wait = ( int )$bStartOver - $duration + 1; // secs
+            @header('HTTP/1.0 503 Service Unavailable');
+            @header("Status: 503 Service Temporarily Unavailable");
+            header('Content-Type: text/html');
+            header("Retry-After: $wait");
+            header('Content-Type: text/html');
+            echo "<html><body><p><b>Server under undue load</b><br />";
+            echo "$visits visits from your IP-Address within the last " . (( int )$duration / 3600) . " hours. Please wait " . (( int )$wait / 3600) . " hours before retrying.</p></body></html>";
+            $t = gettimeofday();
+            $bLogLine = $ipRemote . '`' . get_host($ipRemote) . '`' . date('d/m/y H:i:') . substr($t['sec'], -2) . ':' . substr($t['usec'], 0, 3) . '`' . $useragent . "`(slow scraper)\n";
 
             /* ********* test for fast scrapers *********** */
-        if (
+        } elseif (
             ($visits >= $bMaxVisit) and
             (($visits / $duration) > ($bMaxVisit / $bInterval))
         ) {
@@ -220,13 +232,12 @@ if (file_exists($ipFile)) {
             header('X-Powered-By: ');
             header('Connection: close');
             header('Content-Type: text/html');
-            $fields = array(
-                'bbx.wait' => $wait,
-            );
-            $fields['bbx.appeal'] = $showFastAppeal? $modx->getChunk($appealTpl) : '';
-            echo $modx->getChunk('FastScraperTpl', $fields);
+
+            echo ' <html><body><p><b>Server under heavy load</b><br />
+ You are scraping this site too quickly. Please wait at least ' . $wait . ' secs before retrying.</p>
+ </body></html>';
             $t = gettimeofday();
-            $bLogLine = $ipRemote . '`' . get_host($ipRemote) . '`' . date('d/m/y H:i:'). substr($t['sec'],-2) . ':' . substr($t['usec'],0,3) . '`' . $useragent . "`(fast scraper)\n";
+            $bLogLine = $ipRemote . '`' . get_host($ipRemote) . '`' . date('d/m/y H:i:') . substr($t['sec'], -2) . ':' . substr($t['usec'], 0, 3) . '`' . $useragent . "`(fast scraper)\n";
 
         }
     } else {
@@ -265,4 +276,3 @@ if (file_exists($ipFile)) {
 /* set mtime and atime of the ip file for this user */
 touch($ipFile, $startTime, $hitsTime);
 ignore_user_abort($oldSetting);
-// -------------- Stop blocking badly-behaved bots : top code --------

@@ -46,7 +46,6 @@ if ($modx->context->get('key') == 'mgr') {
 if (stristr($_SERVER['REQUEST_URI'], 'reflect')) {
     $oldSetting = ignore_user_abort( TRUE );   // otherwise can screw-up logfile
     $ipRemote = $_SERVER['REMOTE_ADDR'];
-    $reflectTpl = empty($props['reflect_message_tpl']) ? 'ReflectMessageTpl' : $props['reflect_message_tpl'];
     $useragent = isset($_SERVER['HTTP_USER_AGENT'])
             ? $_SERVER['HTTP_USER_AGENT']
             : '<unknown user agent>';
@@ -58,7 +57,9 @@ if (stristr($_SERVER['REQUEST_URI'], 'reflect')) {
     header('X-Powered-By: ');
     header('Connection: close');
     header('Content-Type: text/html');
-    echo $modx->getChunk($reflectTpl);
+    echo  '<html><body><p><b>Go Away</b><br />
+ The Reflect snippet does not exist on this site.</p>
+ </body></html>';
     $t = gettimeofday();
     $bLogLine = "$ipRemote`" . get_host($ipRemote) . '`' . date('d/m/y H:i:') . substr($t['sec'], -2) . ':' . substr($t['usec'], 0, 3) . "`$useragent`(reflect violator)\n";
     $file = MODX_CORE_PATH . 'blocklogs/reflctblock.log';
