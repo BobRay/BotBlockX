@@ -97,6 +97,7 @@ $oldSetting = ignore_user_abort(TRUE); // otherwise can screw-up logfile
 
 $ipRemote = $_SERVER['REMOTE_ADDR'];
 
+/* ToDo: Speed this up and remove some properties */
 /* secs; check interval (best > 5 < 30 secs) (default: 7)
 * Fast Scrapers will make too many accesses during the interval */
 $bInterval = empty($props['interval']) ? 7 : $props['interval'];

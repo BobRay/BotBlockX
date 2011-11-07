@@ -28,7 +28,7 @@
 
 
 $file = MODX_CORE_PATH . '/blocklogs/reflctblock.log';
-
+/* ToDo: Add table_width and cell_width properties */
 $fp = fopen ($file, 'r');
 $output = '';
 if ($fp) {

@@ -42,37 +42,20 @@ $hasAssets = false; /* Transfer the files in the assets dir. */
 $hasCore = true;   /* Transfer the files in the core dir. */
 $hasSnippets = true;
 $hasChunks = true;
-$hasTemplates = false;
 $hasResources = true;
 $hasValidator = true; /* Run a validator before installing anything */
 $hasResolver = true; /* Run a resolver after installing everything */
-$hasSetupOptions = true; /* HTML/PHP script to interact with user */
-$hasMenu = false; /* Add items to the MODx Top Menu */
-$hasSettings = false; /* Add new MODx System Settings */
+
+
 
 /* Note: TVs are connected to their templates in the script resolver
  * (see _build/data/resolvers/install.script.php)
  */
-$hasTemplateVariables = false;
-$hasTemplates = false;
 /* Note: plugin events are connected to their plugins in the script
  * resolver (see _build/data/resolvers/install.script.php)
  */
 $hasPlugins = true;
 $hasPluginEvents = false;
-
-$hasPropertySets = false;
-/* Note: property sets are connected to elements in the script
- * resolver (see _build/data/resolvers/install.script.php)
- */
-$hasSubPackages = false; /* add in other component packages (transport.zip files)*/
-/* Note: The package files will be copied to core/packages but will
- * have to be installed manually with "Add New Package" and "Search
- * Locally for Packages" in Package Manager. Be aware that the
- * copied packages may be older versions than ones already
- * installed. This is necessary because Package Manager's
- * autoinstall of the packages is unreliable at this point. 
- */
 
 /******************************************
  * Work begins here
@@ -97,8 +80,8 @@ $sources= array (
     'validators'=> $root . '_build/validators/',
     'data' => $root . '_build/data/',
     'docs' => $root . 'core/components/' . PKG_NAME_LOWER . '/docs/',
-    'install_options' => $root . '_build/install.options/',
-    'packages'=> $root . 'core/packages',
+    //'install_options' => $root . '_build/install.options/',
+    //'packages'=> $root . 'core/packages',
 );
 unset($root);
 
@@ -137,14 +120,7 @@ if ($hasSnippets) {
     } else { $modx->log(modX::LOG_LEVEL_FATAL,'Adding snippets failed.'); }
 }
 
-if ($hasPropertySets) { /* add property sets */
-    $modx->log(modX::LOG_LEVEL_INFO,'Adding in property sets.');
-    $propertysets = include $sources['data'].'transport.propertysets.php';
-    /* note: property set' properties are set in transport.propertysets.php */
-    if (is_array($snippets)) {
-        $category->addMany($propertysets, 'PropertySets');
-    } else { $modx->log(modX::LOG_LEVEL_FATAL,'Adding property sets failed.'); }
-}
+
 if ($hasChunks) { /* add chunks  */
     $modx->log(modX::LOG_LEVEL_INFO,'Adding in chunks.');
     /* note: Chunks' default properties are set in transport.chunks.php */    
@@ -154,28 +130,6 @@ if ($hasChunks) { /* add chunks  */
         $category->addMany($chunks, 'Chunks');
     } else { $modx->log(modX::LOG_LEVEL_FATAL,'Adding chunks failed.'); }
 }
-
-
-if ($hasTemplates) { /* add templates  */
-    $modx->log(modX::LOG_LEVEL_INFO,'Adding in templates.');
-    /* note: Templates' default properties are set in transport.templates.php */
-    $templates = include $sources['data'].'transport.templates.php';
-    if (is_array($templates)) {
-        if (! $category->addMany($templates,'Templates')) {
-            $modx->log(modX::LOG_LEVEL_INFO,'addMany failed with templates.');
-        };
-    } else { $modx->log(modX::LOG_LEVEL_FATAL,'Adding templates failed.'); }
-}
-
-if ($hasTemplateVariables) { /* add templatevariables  */
-    $modx->log(modX::LOG_LEVEL_INFO,'Adding in Template Variables.');
-    /* note: Template Variables' default properties are set in transport.tvs.php */
-    $templatevariables = include $sources['data'].'transport.tvs.php';
-    if (is_array($templatevariables)) {
-        $category->addMany($templatevariables, 'TemplateVars');
-    } else { $modx->log(modX::LOG_LEVEL_FATAL,'Adding templatevariables failed.'); }
-}
-
 
 if ($hasPlugins) {
     $modx->log(modX::LOG_LEVEL_INFO,'Adding in Plugins.');
@@ -207,14 +161,6 @@ if ($hasSnippets) {
         );
 }
 
-if ($hasPropertySets) {
-    $attr[xPDOTransport::RELATED_OBJECT_ATTRIBUTES]['PropertySets'] = array(
-            xPDOTransport::PRESERVE_KEYS => false,
-            xPDOTransport::UPDATE_OBJECT => true,
-            xPDOTransport::UNIQUE_KEY => 'name',
-        );
-}
-
 if ($hasChunks) {
     $attr[xPDOTransport::RELATED_OBJECT_ATTRIBUTES]['Chunks'] = array(
             xPDOTransport::PRESERVE_KEYS => false,
@@ -231,21 +177,6 @@ if ($hasPlugins) {
     );
 }
 
-if ($hasTemplates) {
-    $attr[xPDOTransport::RELATED_OBJECT_ATTRIBUTES]['Templates'] = array(
-        xPDOTransport::PRESERVE_KEYS => false,
-        xPDOTransport::UPDATE_OBJECT => true,
-        xPDOTransport::UNIQUE_KEY => 'templatename',
-    );
-}
-
-if ($hasTemplateVariables) {
-    $attr[xPDOTransport::RELATED_OBJECT_ATTRIBUTES]['TemplateVars'] = array(
-        xPDOTransport::PRESERVE_KEYS => false,
-        xPDOTransport::UPDATE_OBJECT => true,
-        xPDOTransport::UNIQUE_KEY => 'name',
-    );
-}
 
 /* create a vehicle for the category and all the things
  * we've added to it.
@@ -266,12 +197,6 @@ if ($hasResolver) {
         'source' => $sources['resolvers'] . 'install.script.php',
     ));
 }
-/* This section transfers every file in the local
- antihammerxs/botblockx/assets directory to the
- target site's assets/botblockx directory on install.
- If the assets dir. has been renamed or moved, they will still
- go to the right place.
- */
 
 if ($hasCore) {
     $vehicle->resolve('file',array(
@@ -280,13 +205,6 @@ if ($hasCore) {
         ));
 }
 
-/* This section transfers every file in the local 
- antihammerxs/botblockx/core directory to the
- target site's core/botblockx directory on install.
- If the core has been renamed or moved, they will still
- go to the right place.
- */
-
     if ($hasAssets) {
         $vehicle->resolve('file',array(
             'source' => $sources['source_assets'],
@@ -294,19 +212,6 @@ if ($hasCore) {
         ));
     }
 
-/* Add subpackages */
-/* The transport.zip files will be copied to core/packages
- * but will have to be installed manually with "Add New Package and
- *  "Search Locally for Packages" in Package Manager
- */
-
-if ($hasSubPackages) {
-    $modx->log(modX::LOG_LEVEL_INFO, 'Adding in subpackages.');
-     $vehicle->resolve('file',array(
-        'source' => $sources['packages'],
-        'target' => "return MODX_CORE_PATH;",
-        ));
-}
 
 /* Put the category vehicle (with all the stuff we added to the
  * category) into the package 
@@ -342,34 +247,6 @@ foreach ($resources as $resource) {
         $modx->log(modX::LOG_LEVEL_INFO,'Packaged in '.count($resources).' resources.');
     }
     unset($resources,$resource,$attributes);
-}
-
-/* Transport Menus */
-if ($hasMenu) {
-    /* load menu */
-    $modx->log(modX::LOG_LEVEL_INFO,'Packaging in menu...');
-    $menu = include $sources['data'].'transport.menu.php';
-    if (empty($menu)) {
-        $modx->log(modX::LOG_LEVEL_ERROR,'Could not package in menu.');
-    } else {
-        $vehicle= $builder->createVehicle($menu,array (
-        xPDOTransport::PRESERVE_KEYS => true,
-        xPDOTransport::UPDATE_OBJECT => true,
-        xPDOTransport::UNIQUE_KEY => 'text',
-        xPDOTransport::RELATED_OBJECTS => true,
-        xPDOTransport::RELATED_OBJECT_ATTRIBUTES => array (
-            'Action' => array (
-                xPDOTransport::PRESERVE_KEYS => false,
-                xPDOTransport::UPDATE_OBJECT => true,
-                xPDOTransport::UNIQUE_KEY => array ('namespace','controller'),
-            ),
-        ),
-));
-        $builder->putVehicle($vehicle);
-
-        $modx->log(modX::LOG_LEVEL_INFO,'Packaged in '.count($menu).' menu items.');
-        unset($vehicle,$menu);
-    }
 }
 
 /* Next-to-last step - pack in the license file, readme.txt, changelog,
