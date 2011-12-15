@@ -47,29 +47,6 @@ $snippets[1]->fromArray(array(
 $properties = include $sources['data'].'/properties/properties.blocklogreport.php';
 $snippets[1]->setProperties($properties);
 
-
-$snippets[2]= $modx->newObject('modSnippet');
-$snippets[2]->fromArray(array(
-    'id' => 2,
-    'name' => 'PageNotFoundLogReport',
-    'description' => 'PageNotFoundLogReport snippet for BotBlockX.',
-    'snippet' => getSnippetContent($sources['source_core'].'/elements/snippets/pagenotfoundlogreport.snippet.php'),
-),'',true,true);
-$properties = include $sources['data'].'/properties/properties.pagenotfoundlogreport.php';
-$snippets[2]->setProperties($properties);
-
-
-$snippets[3]= $modx->newObject('modSnippet');
-$snippets[3]->fromArray(array(
-    'id' => 3,
-    'name' => 'ReflectBlockLogReport',
-    'description' => 'ReflectBlockLogReport snippet for BotBlockX.',
-    'snippet' => getSnippetContent($sources['source_core'].'/elements/snippets/reflectblocklogreport.snippet.php'),
-),'',true,true);
-$properties = include $sources['data'].'/properties/properties.reflectblocklogreport.php';
-$snippets[3]->setProperties($properties);
-
-
 unset($properties);
 
 return $snippets;

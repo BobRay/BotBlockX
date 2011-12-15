@@ -59,10 +59,9 @@ $connectPropertySets = false;
 $success = true;
 
 $blockDir = MODX_CORE_PATH . 'block';
-$logDir = MODX_CORE_PATH . 'blocklogs/';
-$logFile1 = $logDir . 'pagenotfound.log';
-$logFile2 = $logDir . 'ipblock.log';
-$logFile3 = $logDir . 'reflctblock.log';
+$logDir = MODX_CORE_PATH . 'logs/';
+$logFile = $logDir . 'ipblock.log';
+
 
 /* empty and remove directory */
 if (!function_exists("rrmdir")) {
@@ -104,34 +103,7 @@ switch($options[xPDOTransport::PACKAGE_ACTION]) {
             }
         }
 
-        /* separate section for LogPageNotFound */
-        $plugin = 'LogPageNotFound';
-        $pluginObj = $modx->getObject('modPlugin',array('name'=>$plugin));
-            if (! $pluginObj) {
-                $modx->log(xPDO::LOG_LEVEL_INFO,'cannot get object: ' . $plugin);
-            }else {
-                $modx->log(xPDO::LOG_LEVEL_INFO,'Assigning Events to Plugin ' . $plugin);
-                $intersect = $modx->newObject('modPluginEvent');
-                $intersect->set('event','OnPageNotFound');
-                $intersect->set('pluginid',$pluginObj->get('id'));
-                $intersect->set('priority',5);
-                $intersect->save();
-            }
 
-        /* separate section for ReflectBlock */
-        $plugin = 'ReflectBlock';
-        $pluginObj = $modx->getObject('modPlugin',array('name'=>$plugin));
-            if (! $pluginObj) {
-                $modx->log(xPDO::LOG_LEVEL_INFO,'cannot get object: ' . $plugin);
-            }else {
-                $modx->log(xPDO::LOG_LEVEL_INFO,'Assigning Events to Plugin ' . $plugin);
-                $intersect = $modx->newObject('modPluginEvent');
-                $intersect->set('event','OnPageNotFound');
-                $intersect->set('pluginid',$pluginObj->get('id'));
-                $intersect->set('priority',0);
-                $intersect->save();
-            }
-        
         /* Create log and block directories */
 
         if (! is_dir($blockDir)) {
@@ -149,30 +121,26 @@ switch($options[xPDOTransport::PACKAGE_ACTION]) {
                 $modx->log(xPDO::LOG_LEVEL_ERROR, "Failed to create directory: $logDir");
             } else {
                 $modx->log(xPDO::LOG_LEVEL_INFO, "Created directory: $logDir");
-                $fp = fopen($logFile1, 'w');
+                $fp = fopen($logFile, 'w');
                 if ($fp) {
-                    $modx->log(xPDO::LOG_LEVEL_INFO, "Created file: $logFile1");
+                    $modx->log(xPDO::LOG_LEVEL_INFO, "Created file: $logFile");
                     fclose($fp);
                 } else {
-                    $modx->log(xPDO::LOG_LEVEL_ERROR, "Failed to create file: $logFile1");
+                    $modx->log(xPDO::LOG_LEVEL_ERROR, "Failed to create file: $logFile");
                 }
-                $fp = fopen($logFile2, 'w');
-                if ($fp) {
-                    $modx->log(xPDO::LOG_LEVEL_INFO, "Created file: $logFile2");
-                    fclose($fp);
-                } else {
-                    $modx->log(xPDO::LOG_LEVEL_ERROR, "Failed to create file: $logFile2");
-                }
-                $fp = fopen($logFile3, 'w');
-                if ($fp) {
-                    $modx->log(xPDO::LOG_LEVEL_INFO, "Created file: $logFile3");
-                    fclose($fp);
-                } else {
-                    $modx->log(xPDO::LOG_LEVEL_ERROR, "Failed to create file: $logFile3");
-                }
+
             }
         } else {
             $modx->log(xPDO::LOG_LEVEL_INFO,  $logDir .  " Already exists");
+            $fp = fopen($logFile, 'w');
+            if ($fp) {
+                $modx->log(xPDO::LOG_LEVEL_INFO, "Created file: $logFile");
+                fclose($fp);
+            } else {
+                $modx->log(xPDO::LOG_LEVEL_ERROR, "Failed to create file: $logFile");
+            }
+
+
         }
     
     /* This code will execute during an upgrade */
@@ -188,9 +156,9 @@ switch($options[xPDOTransport::PACKAGE_ACTION]) {
     /* This code will execute during an uninstall */
     case xPDOTransport::ACTION_UNINSTALL:
         $modx->log(xPDO::LOG_LEVEL_INFO,'Uninstalling . . .');
-        /* empty and remove block and log directories */
-        rrmdir ($logDir);
-        $modx->log(xPDO::LOG_LEVEL_INFO,'Removed log directory');
+
+        unlink ($logFile);
+        $modx->log(xPDO::LOG_LEVEL_INFO,'Removed log file');
 
         rrmdir ($blockDir);
         $modx->log(xPDO::LOG_LEVEL_INFO,'Removed block directory');

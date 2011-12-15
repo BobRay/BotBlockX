@@ -48,28 +48,4 @@ $properties = include $sources['data'].'properties/properties.botblockx.php';
 $plugins[1]->setProperties($properties);
 unset($properties);
 
-$plugins[2]= $modx->newObject('modplugin');
-$plugins[2]->fromArray(array(
-    'id' => 2,
-    'name' => 'LogPageNotFound',
-    'description' => 'Log page-not-found events',
-    'plugincode' => getPluginContent($sources['source_core'].'/elements/plugins/logpagenotfound.plugin.php'),
-    'disabled' => '1',
-),'',true,true);
-//$properties = include $sources['data'].'properties/properties.logpagenotfound.php';
-//$plugins[2]->setProperties($properties);
-$plugins[3]= $modx->newObject('modplugin');
-$plugins[3]->fromArray(array(
-    'id' => 3,
-    'name' => 'ReflectBlock',
-    'description' => 'Block requests containing the word reflect',
-    'plugincode' => getPluginContent($sources['source_core'].'/elements/plugins/reflectblock.plugin.php'),
-    'disabled' => '1',
-),'',true,true);
-//$properties = include $sources['data'].'properties/properties.reflectblock.php';
-//$plugins[3]->setProperties($properties);
-
-
-unset($properties);
-
 return $plugins;

@@ -13,6 +13,14 @@
 
 $properties = array(
     array(
+        'name' => 'log_max_lines',
+        'desc' => 'botblockx_log_max_lines_desc',
+        'type' => 'integer',
+        'options' => '',
+        'value' => '300',
+        'lexicon' => 'botblockx:properties',
+        ),
+    array(
         'name' => 'use_whitelist',
         'desc' => 'botblockx_use_whitelist_desc',
         'type' => 'combo-boolean',

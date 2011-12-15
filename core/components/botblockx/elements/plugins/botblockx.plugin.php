@@ -64,11 +64,10 @@ if (!defined('_B_DIRECTORY')) {
 if (!defined('_B_LOGFILE')) {
     define('_B_LOGFILE', 'ipblock.log');
 }
-if (!defined('_B_LOGMAXLINES')) {
-    define('_B_LOGMAXLINES', 1000);
-}
+
+
 if (!defined('_L_DIRECTORY')) {
-    define('_L_DIRECTORY', _B_ROOT . 'blocklogs/');
+    define('_L_DIRECTORY', _B_ROOT . 'logs/');
 }
 
 if (!function_exists("ipIsInNet")) {
@@ -99,7 +98,7 @@ if (!function_exists("get_host")) {
 $props =& $scriptProperties;
 $bLogLine = '';
 $oldSetting = ignore_user_abort(TRUE); // otherwise can screw-up logfile
-
+$logMaxLines = empty ($props['log_max_lines'])? 300 : $props['log_max_lines'];
 $ipRemote = $_SERVER['REMOTE_ADDR'];
 
 
@@ -256,9 +255,9 @@ if (file_exists($ipFile)) {
         touch($ipFile, $startTime, $hitsTime);
         $log = file($ipLogFile); // flock() disabled in some kernels (eg 2.4)
         if ($fp = fopen($ipLogFile, 'a')) { // tiny danger of 2 threads interfering; live with it
-            if (count($log) >= _B_LOGMAXLINES) { // otherwise grows like Topsy
+            if (count($log) >= $logMaxLines) { // otherwise grows like Topsy
                 fclose($fp); // fopen,fclose put as close together as possible
-                while (count($log) >= _B_LOGMAXLINES)
+                while (count($log) >= $logMaxLines)
                 {
                     array_shift($log);
                 }

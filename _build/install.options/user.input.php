@@ -27,8 +27,7 @@
  * @package botblockx
  * @subpackage build
  */
-/* User enters Resource ID of contact page here. Used to set contact_id default property
- * of the plugin, which is used in the Tpl chunk for appeals ("If you think this is an error," etc).
+/* Not used in this version
  */
 
 $output = '<p>&nbsp;</p>
