@@ -1,7 +1,7 @@
 <?php
 /**
  * BlockLogReport
- * Copyright 2011 Bob Ray
+ * Copyright 2011-2013 Bob Ray
  *
  * BlockLogReport is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -30,7 +30,9 @@
 $file = MODX_CORE_PATH . '/logs/ipblock.log';
 $cellWidth = empty($scriptProperties['cell_width'])? 30 : $scriptProperties['cell_width'];
 $tableWidth = empty($scriptProperties['table_width'])? '80%' : $scriptProperties['table_width'];
-
+if (isset($_POST['clearlog'])) {
+    file_put_contents($file, "");
+}
 $fp = fopen ($file, 'r');
 $output = '';
 if ($fp) {

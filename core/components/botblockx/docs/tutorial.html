@@ -2,7 +2,7 @@
 
 <p>The default install of this plugin will block badly behaved bots (both slow and fast), while leaving good bots like Google alone. If you want to allow slow scrapers to grab your content (some regular users download whole sites to use for offline reference), you can disable the slow scraper check by changing the &amp;total_visits property to 'none'.</p>
 
-<p>BotBlockX creates a <i>lot</i> of files in the block/ directory, but they are all zero-length files so they shouldn't count as resources on your site. This is possible because of Alex's ingenious use of the files' modification time and access time to store information about the visitor's behavior. Both the block/ directory and the logs/ directory are placed directly under the MODX core directory to speed up access time.</p>
+<p>BotBlockX creates a <i>lot</i> of files in the block/ directory, but they are all zero-length files so they shouldn't count as resources on your site. This is possible because of Alex's ingenious use of the files' modification time and access time to store information about the visitor's behavior. Both the block/ directory and the blocklogs/ directory are placed directly under the MODX core directory to speed up access time.</p>
 
 <h3>How it Works</h3>
 
@@ -12,11 +12,11 @@
 
 <p>To control good bots, place these lines in your robots.txt file in the MODX root directory. Leave a space above and below the lines:</p>
 
-<pre>
+<pre><fixedpre>
 User-agent: *
 Crawl-delay: 90
 Crawl-Delay: 90
-</pre>
+</fixedpre></pre>
 
 <p>If the lines above are in your robots.txt file, no well-behaved bot should be caught by the fast scraper code.</p>
 
@@ -46,7 +46,7 @@ Crawl-Delay: 90
 <p>Another possible issue is that some servers reset the access time of all files when doing their daily backups (usually around 2:30 a.m.) If this is the case, some visitors may be blocked for a short period after the backup. I think that most servers don't do this, but if yours does, there is a fix for it in the comments of the code at Alex's site.</p>
 
 <h3>BotBlockXLog</h3>
-<p>When a bot is blocked, an entry is written to the ipblock.log file (inside the logs/ directory below the MODX core directory). The log entry will the IP, host name, date/time, useragent, and the the type of scraper (slow or fast). The fields are separated by back-ticks.</p>
+<p>When a bot is blocked, an entry is written to the ipblock.log file (inside the blocklogs/ directory below the MODX core directory). The log entry will the IP, host name, date/time, useragent, and the the type of scraper (slow or fast). The fields are separated by back-ticks.</p>
 
 <p>Remember that there will be an entry for every request made by a blocked bot, so there will be a lot of duplicates, especially with stupid fast scrapers. The log is limited to 300 entries, but you can change that with the &amp;log_max_lines property. New entries will be added at the top and old ones will scroll off the bottom. </p>
 
@@ -61,12 +61,12 @@ Crawl-Delay: 90
 
 <p>Note that if you have an Adsense site, every request will be followed by one or more visits from the GoogleBot looking for the same URL. You'll also see the GoogleBot failing to find the unpublished report page when you access them.</p>
 
-<p>You can prevent some of that with these lines in your robots.txt file. Adjust the file suffix as necessary. Note that the misspelling of reflect is intentional.</p>
+<p>You can prevent some of that with these lines in your robots.txt file. Adjust the file suffix as necessary.</p>
 
-<pre>
-    User-agent: Mediapartners-Google*
-    Disallow: bot-block-report.html
-</pre>
+<pre><fixedpre>
+User-agent: Mediapartners-Google*
+Disallow: bot-block-report.html
+</fixedpre></pre>
 
 <h3>Reports</h3>
 <p>The report snippet and resource to view it are included in the package. The resource is unpublished and hidden from menus by default, but you can still view the log by previewing the resource from the Manager when you are logged in as a Super User.</p>
@@ -74,34 +74,35 @@ Crawl-Delay: 90
 <p>The log snippet has two properties: &amp;table_width (to set the width of the table) and &amp;cell_width (to set the width of each cell). Feel free to adjust them to meet your needs.</p>
 
 <p>If you see serious repeat offenders in the log, you can block them by IP with code like this in your .htaccess file (using their actual IPs):</p>
-<pre>
-    order allow,deny
-    deny from 127.0.0.1
-    deny from 127.0.0.2
-    deny from 127.0.0.3
-    allow from all
-</pre>
+<pre><fixedpre>
+order allow,deny
+deny from 127.0.0.1
+deny from 127.0.0.2
+deny from 127.0.0.3
+allow from all
+</fixedpre></pre>
+
 <p>Blocking users in the .htaccess file is extremely fast and it stops the users dead before they even reach the site. It's not all that practical, however, since people can spoof IPs, there are zillions of evildoers out there, and the request can be from an IP that might later be assigned to a legitimate user. Be sure to note the host before adding an IP block. You don't want to block the GoogleBot or yourself. The User Agent can be helpful here, but many evildoers will fake the User Agent and pretend to be the GoogleBot.</p>
 
 <p>Ultimately, it's better to block miscreants by what they are looking for, using something like this:</p>
 <pre><fixedpre>
-    RewriteCond %{REQUEST_URI} forgot_password [NC,OR]
-    RewriteCond %{REQUEST_URI} phpinfo [NC,OR]
-    RewriteCond %{REQUEST_URI} password_forgotten [NC,OR]
-    RewriteCond %{REQUEST_URI} mysql [NC,OR]
-    RewriteCond %{REQUEST_URI} sqlpatch [NC,OR]
-    RewriteCond %{REQUEST_URI} humans [NC,OR]
-    RewriteCond %{REQUEST_URI} checkout [NC,OR]
-    RewriteCond %{REQUEST_URI} customer [NC,OR]
-    RewriteCond %{REQUEST_URI} admin [NC,OR]
-    RewriteCond %{REQUEST_URI} expand [NC,OR]
-    RewriteCond %{REQUEST_URI} contract [NC,OR]
-    RewriteCond %{REQUEST_URI} alert [NC,OR]
-    RewriteCond %{REQUEST_URI} client-info\.php [NC,OR]
-    RewriteCond %{QUERY_STRING} (.*)(http|https|ftp):\/\/(.*) [NC,OR]
-    RewriteCond %{QUERY_STRING} forgot_password [NC,OR]
-    RewriteCond %{HTTP_USER_AGENT} libwww-perl.* [NC]
-    RewriteRule .* - [F,L]
+RewriteCond %{REQUEST_URI} forgot_password [NC,OR]
+RewriteCond %{REQUEST_URI} phpinfo [NC,OR]
+RewriteCond %{REQUEST_URI} password_forgotten [NC,OR]
+RewriteCond %{REQUEST_URI} mysql [NC,OR]
+RewriteCond %{REQUEST_URI} sqlpatch [NC,OR]
+RewriteCond %{REQUEST_URI} humans [NC,OR]
+RewriteCond %{REQUEST_URI} checkout [NC,OR]
+RewriteCond %{REQUEST_URI} customer [NC,OR]
+RewriteCond %{REQUEST_URI} admin [NC,OR]
+RewriteCond %{REQUEST_URI} expand [NC,OR]
+RewriteCond %{REQUEST_URI} contract [NC,OR]
+RewriteCond %{REQUEST_URI} alert [NC,OR]
+RewriteCond %{REQUEST_URI} client-info\.php [NC,OR]
+RewriteCond %{QUERY_STRING} (.*)(http|https|ftp):\/\/(.*) [NC,OR]
+RewriteCond %{QUERY_STRING} forgot_password [NC,OR]
+RewriteCond %{HTTP_USER_AGENT} libwww-perl.* [NC]
+RewriteRule .* - [F,L]
 </fixedpre></pre>
 
 <p>Include the &quot;OR&quot; directive on every condition but the last. Before adding the lines to the .htaccess file, make sure that none of the strings you're blocking are used in aliases at your site.</p>

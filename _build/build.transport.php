@@ -31,8 +31,8 @@
 /* Set package info be sure to set all of these */
 define('PKG_NAME','BotBlockX');
 define('PKG_NAME_LOWER','botblockx');
-define('PKG_VERSION','1.0.0');
-define('PKG_RELEASE','beta1');
+define('PKG_VERSION','1.0.1');
+define('PKG_RELEASE','pl');
 define('PKG_CATEGORY','BotBlockX');
 
 /* Set package options - you can turn these on one-by-one
@@ -91,7 +91,7 @@ require_once $sources['build'].'build.config.php';
 require_once MODX_CORE_PATH . 'model/modx/modx.class.php';
 $modx= new modX();
 $modx->initialize('mgr');
-$modx->setLogLevel(xPDO::LOG_LEVEL_INFO);
+$modx->setLogLevel(xPDO::LOG_LEVEL_ERROR);
 $modx->setLogTarget(XPDO_CLI_MODE ? 'ECHO' : 'HTML');
 
 /* load builder */
@@ -100,7 +100,7 @@ $builder = new modPackageBuilder($modx);
 $builder->createPackage(PKG_NAME_LOWER, PKG_VERSION, PKG_RELEASE);
 $builder->registerNamespace(PKG_NAME_LOWER,false,true,'{core_path}components/'.PKG_NAME_LOWER.'/');
 
-
+$modx->setLogLevel(xPDO::LOG_LEVEL_INFO);
 /* create category  The category is required and will automatically
  * have the name of your package
  */
@@ -121,10 +121,12 @@ if ($hasSnippets) {
 
 if ($hasPlugins) {
     $modx->log(modX::LOG_LEVEL_INFO,'Adding in Plugins.');
+    $modx->setLogLevel(xPDO::LOG_LEVEL_ERROR);
     $plugins = include $sources['data'] . 'transport.plugins.php';
-     if (is_array($plugins)) {
-        $category->addMany($plugins);
-     }
+    if (is_array($plugins)) {
+    $category->addMany($plugins);
+    }
+    $modx->setLogLevel(xPDO::LOG_LEVEL_INFO);
 }
 
 /* Create Category attributes array dynamically
