@@ -100,7 +100,8 @@ if (!function_exists("get_host")) {
 $props =& $scriptProperties;
 $bLogLine = '';
 $oldSetting = ignore_user_abort(TRUE); // otherwise can screw-up logfile
-$logMaxLines = empty ($props['log_max_lines'])? 300 : $props['log_max_lines'];
+$logMaxLines = $modx->getOption('log_max_lines', $props, 300);
+$logMaxLines = empty ($logMaxLines)? 300 : $logMaxLines;
 $ipRemote = $_SERVER['REMOTE_ADDR'];
 
 
@@ -117,16 +118,19 @@ $bPenalty = 60;
 /* For slow scrapers, tot visits allowed within $bStartOver.
 *  Set to `none` to disable slow-scraper block (default 1500)
 */
-$bTotVisit = empty($props['total_visits']) ? 1500 : $props['total_visits'];
+$bTotVisit = $modx->getOption('total_visits', $props, 1500);
+$bTotVisit = empty($bTotVisit)? 1500 : $bTotVisit;
 $bTotVisit = $bTotVisit == 'none' || $bTotVisit == 'None' ? 0 : $bTotVisit;
 
 /* secs between tracking restarts (default 12 hours = 43200) */
-$bStartOver = empty($props['start_over_secs']) ? 43200 : $props['start_over_secs'];
+$bStartOver = $modx->getOption('start_over_secs', $props, 43200);
+$bStartOver = empty($bStartOver) ? 43200 : $bStartOver;
 
 /* integer used to shorten the md5 hash if you don't need the full length;
 * 2=255 files, 3=4,096 files 4=65,025 files, 5=1,044,480 files (should be > 1 < 6)
 * (default 3) */
-$ipLength = empty($props['ip_length']) ? 3 : $props['ip_length'];
+$ipLength = $modx->getOption('ip_length', $props, 3);
+$ipLength = empty($ipLength) ? 3 : $ipLength;
 
 /* Specify whether warnings will contain a message about appealing via
  * the contact page */
