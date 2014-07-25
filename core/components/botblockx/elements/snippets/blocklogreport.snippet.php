@@ -1,4 +1,3 @@
-<?php
 /**
  * BlockLogReport
  * Copyright 2011-2013 Bob Ray
@@ -18,40 +17,49 @@
  *
  * @package botblockx
  * @author Bob Ray <http://bobsguides.com>
- 
+  
  *
  * Description: The BlockLogReport snippet presents the contents of the block log as a table.
  *
  * /
-
+ 
 /* Modified: November 1, 2011 */
-
-
+/* Modified: June 30, 2013 by sottwell to make it a Dashboard widget */
+/* embedded clear-log form, changing the name to clearbbxlog */
+ 
+ 
 $file = MODX_CORE_PATH . '/logs/ipblock.log';
 $cellWidth = empty($scriptProperties['cell_width'])? 30 : $scriptProperties['cell_width'];
 $tableWidth = empty($scriptProperties['table_width'])? '80%' : $scriptProperties['table_width'];
-if (isset($_POST['clearlog'])) {
+if (isset($_POST['clearbbxlog'])) {
     file_put_contents($file, "");
 }
 $fp = fopen ($file, 'r');
 $output = '';
 if ($fp) {
-    $output = '<table class="BlockLog" border="1" cellpadding="10" width="' . $tableWidth . '">';
-    $output .= '<tr><th>IP</th><th>Host</th><th>Time</th><th>User Agent</th><th>Type</th></tr>';
+    $output = '<table class="classy" style="width:100%;">';
+    $output .= '<thead><tr><th>IP</th><th>Host</th><th>Time</th><th>User Agent</th><th>Type</th></tr></thead><tbody>';
+    $i = 0;
     while (($line = fgets($fp)) !== false) {
+        $style = $i%2? 'style="background:#F9F9F9"' : 'style="background:#fff;"';
         $line = trim($line);
         if (strpos($line,'#' == 0) || empty($line)) continue;
         $lineArray = explode('`',$line);
-        $output .= '<tr>';
+        $output .= '<tr $style>';
         foreach($lineArray as $item) {
-            $output .= '<td style="word-break:break-all;" width = "' . $cellWidth . '">' . $item . '</td>';
+            $output .= '<td style="word-break:break-all;border-bottom:1px solid #E5E5E5" width = "' . $cellWidth . '">' . $item . '</td>';
         }
         $output .= '</tr>';
+        $i++;
     }
-    $output .= '</table>';
+    $output .= '</tbody></table>';
+    $output .= '<hr>
+     <form action="" method="post">
+    <input type="submit" name="clearbbxlog" value="Clear Log">
+    </form>';
     fclose($fp);
 } else {
     $output = 'Could not open: ' . $file;
 }
-
+ 
 return $output;
