@@ -2,6 +2,11 @@ Changelog for BotBlockX
 
 BotBlockX 1.0.1
 -------------------
+Sottwell's modx to report
+Update for MODX 2.3
+
+BotBlockX 1.0.1
+-------------------
 Added button to clear log
 
 
