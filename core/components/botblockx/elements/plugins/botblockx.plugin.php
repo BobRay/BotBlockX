@@ -27,6 +27,7 @@
 /*  The following will be useful for bug-checking (do not use on a live server): */
 /*   error_reporting( E_ALL ); */
 
+$scriptProperties['debug'] = isset($scriptProperties['debug'])? $scriptProperties['debug'] : false;
 if (!function_exists("my_debug") && $scriptProperties['debug']) {
     function my_debug($message, $clear = false)
     {
@@ -275,3 +276,5 @@ if (file_exists($ipFile)) {
 /* set mtime and atime of the ip file for this user */
 touch($ipFile, $startTime, $hitsTime);
 ignore_user_abort($oldSetting);
+
+return '';
