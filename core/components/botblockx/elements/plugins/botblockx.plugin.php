@@ -271,6 +271,8 @@ if (file_exists($ipFile)) {
                 $bLogLine = implode('', $log);
                 $fp = fopen($ipLogFile, 'w');
             }
+            $blogLine = strip_tags($bLogLine);
+            $bLogLine = htmlspecialchars($bLogLine, ENT_QUOTES, 'UTF-8');
             fputs($fp, $bLogLine);
             fclose($fp);
         }

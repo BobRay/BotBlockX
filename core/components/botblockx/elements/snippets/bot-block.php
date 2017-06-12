@@ -2,7 +2,12 @@
 
 /* For reference. This is Alex's original code */
 
-/* Items prepended with an underscore are Constants that need to be define()'d
+/* ------------------------------------------------------------------------
+ * this copy of Alex Kemp's, PHP coded, bot-block & anti-scrapers routine
+ * was published at http://www.searchlores.org in April 2006
+ * and is part of the bots.htm section.
+ * ------------------------------------------------------------------------
+ * Items prepended with an underscore are Constants that need to be define()'d
  * somewhere in your scripts before this snippet of code gets used:
  * eg (*nix):
 	define( '_B_DIRECTORY', '/full/path/on/server/to/block/dir/' );
@@ -31,24 +36,32 @@
 	$ipRemote	= ${$_SERVER_ARRAY}[ 'REMOTE_ADDR' ];
 	$bInterval	= 7;		// secs; check interval (best > 5 < 30 secs)
 	$bMaxVisit	= 14;		// Max visits allowed within $bInterval (MUST be > $bInterval)
+	/* ------------------------------------------------------------------------
+	 * The default trip-rate is 2 / sec ($bMaxVisit / $bInterval = 14 / 7) which means,
+	 * at the absolute worst-case scenario, a fast scraper will get 999 pages in 500 secs.
+	 * That is a lot, but a reasonable compromise without using some form of whitelist-exclusions
+	 * (my attitude is a-scraper-is-a-scraper whether they are wearing an admittance-badge or not;
+	 * it is their behaviour which determines their status).
+	 * ------------------------------------------------------------------------
+	 */
 	$bPenalty	= 60;		// Seconds before visitor is allowed back
-	$bTotVisit	= 1500;	// tot visits within $bStartOver (0==no slow-scraper block)
+	$bTotVisit	= 1000;	// tot visits within $bStartOver (0==no slow-scraper block)
 	$bStartOver	= 86400;	// secs, default 1 day; restart tracking
 	$ipLength	= 3;		// integer; 2=255 files, 3=4,096 files (best > 1 < 6)
 	$ipLogFile	= _B_DIRECTORY . _B_LOGFILE;
-	if( $ipLength > 3 ) {	// 4=65,025 files, 5=1,044,480 files
-		// make sure that _B_DIRECTORY is inside script dir
-		// eg: if /path/to/script/ then /path/to/script/block/ not: /path/to/block/
+	if( $ipLength > 3 ) {
+		// this addition is untested by the author; 4=65,025 files, 5=1,044,480 files
 		$bDirPrefix	= 'b_';
 		$tmp			= substr( md5( $ipRemote ), -$ipLength );
 		$ipFile		= _B_DIRECTORY . $bDirPrefix . substr( $tmp, 0, 2 );	// 255 dirs
 		if( !is_dir( $ipFile )) {
-			$oldMask	= umask( 0 );	// prevent umask value interfering
+			$oldMask	= umask( 0777 );
 			if( !mkdir( $ipFile, 0700 )) die( "Failed to create dir: '$ipFile'" );
 			umask( $oldMask );
 		}
-		$ipFile		.= DIRECTORY_SEPARATOR . substr( $tmp, 2 );
+		$ipFile		.= '/'. substr( $tmp, 2 );	// change to back-slash for Windows
 	} else {
+		// this is original (tested) coding
 		$ipFile		= _B_DIRECTORY . substr( md5( $ipRemote ), -$ipLength );
 	}
 	$bLogLine	= '';
@@ -65,19 +78,19 @@
 		} else if( $duration < 1 ) $duration = 1;
 		// test for slow scrapers
 		if(
-			( $bTotVisit > 0 ) and 
+			( $bTotVisit > 0 ) and
 			( $visits >= $bTotVisit )
 		) {
 			$useragent	= ( isset( ${$_SERVER_ARRAY}[ 'HTTP_USER_AGENT' ]))
 				? ${$_SERVER_ARRAY}[ 'HTTP_USER_AGENT' ]
 				: '<unknown user agent>';
-			$wait			= ( int ) ( $bStartOver - $duration + 1 );	// secs
+			$wait			= ( int ) $bStartOver - $duration + 1;	// secs
 			header( 'HTTP/1.0 503 Service Unavailable' );
+			header( 'Content-Type: text/html' );
 			header( "Retry-After: $wait" );
-			header( 'Connection: close' );
 			header( 'Content-Type: text/html' );
 			echo "<html><body><p><b>Server under undue load</b><br />";
-			echo "$visits visits from your IP-Address within the last ". (( int ) ( $duration / 3600 )) ." hours. Please wait ". (( int ) ( $wait / 3600 )) ." hours before retrying.</p></body></html>";
+			echo "$visits visits from your IP-Address within the last ". (( int ) $duration / 3600 ) ." hours. Please wait ". (( int ) $wait / 3600 ) ." hours before retrying.</p></body></html>";
 			$bLogLine	= "$ipRemote ". date( 'd/m/Y H:i:s' ) ." $useragent (slow scraper)\n";
 		// test for fast scrapers
 		} elseif(
@@ -86,7 +99,7 @@
 		) {
 			$startTime	= $time;
 			$hitsTime	= $time + (( $bMaxVisit * $bPenalty ) / $bInterval );
-			$wait			= ( int ) ( $hitsTime - $startTime + 1 );
+			$wait			= ( int ) $hitsTime - $startTime + 1;
 			$useragent	= ( isset( ${$_SERVER_ARRAY}[ 'HTTP_USER_AGENT' ]))
 				? ${$_SERVER_ARRAY}[ 'HTTP_USER_AGENT' ]
 				: '<unknown user agent>';
@@ -148,12 +161,12 @@
 		ob_end_clean();	// discards all cached output
 		$startTime	= $time;
 		$hitsTime	= $time + (( $bMaxVisit * $bPenalty ) / $bInterval );
-		$wait			= ( int ) ( $hitsTime - $startTime + 1 );
+		$wait			= ( int ) $hitsTime - $startTime + 1;
 		$useragent	= ( isset( ${$_SERVER_ARRAY}[ 'HTTP_USER_AGENT' ]))
 			? ${$_SERVER_ARRAY}[ 'HTTP_USER_AGENT' ]
 			: '<unknown user agent>';
 		header( 'HTTP/1.0 503 Service Unavailable' );
-		header( "Retry-After: $wait" );
+			header( "Retry-After: $wait" );
 		header( 'Connection: close' );
 		header( 'Content-Type: text/html' );
 		echo "<html><body><p><b>Server under heavy load</b><br />";
@@ -189,7 +202,6 @@ ls -lt # show modification time (mtime)
 cat some-file
 ls -lu # and re-check some-file's time; it should have changed
 
- *
  * One means of calling the script early is by placing it into it's own file
  * (include the <?php ... ?> start-end tags) and adding the following to .htaccess:
 
@@ -204,7 +216,6 @@ ls -lu # and re-check some-file's time; it should have changed
  * especially careful of a space (whatever) hiding before/after the <?php ... ?>
  * start-end tags (thanks saltlakejohn).
  *
- *
  * If using the optional bottom-code, a similar route can be taken:
 
 <IfModule mod_php4.c>
@@ -214,10 +225,8 @@ ls -lu # and re-check some-file's time; it should have changed
  * Note that "block_bad_bots_*.php" does NOT have to be web-accessible in this instance,
  * although it does have to be readable by the Apache client.
  *
- *
  * The long-term scraper block can be switched off by setting $bTotVisit = 0;
  * that will NOT affect the fast-scraper blocking, or 24-hour reset.
- *
  *
  * As written, the routine will catch *any* bot that trips either the fast- or slow-triggers.
  * This may worry some people! Here are 3 solutions:
@@ -250,7 +259,7 @@ Disallow: /cgi-bin
 		$_SERVER_ARRAY	= 'GLOBALS';
 	}
 	global ${$_SERVER_ARRAY};
-	$ipRemote	= ${$_SERVER_ARRAY}[ 'REMOTE_ADDR' ];
+	$ipRemote		= ${$_SERVER_ARRAY}[ 'REMOTE_ADDR' ];
 	if(
 		ipIsInNet( $ipRemote, '64.62.128.0/20' ) or			// Gigablast has blocks 64.62.128.0 - 64.62.255.255
 		ipIsInNet( $ipRemote, '66.154.100.0/22' ) or			// Gigablast has blocks 66.154.100.0 - 66.154.103.255
@@ -260,7 +269,6 @@ Disallow: /cgi-bin
 		ipIsInNet( $ipRemote, '72.14.224.0/20' ) or
 		ipIsInNet( $ipRemote, '216.239.32.0/19' ) or			// Google has blocks 216.239.32.0 - 216.239.63.255
 		ipIsInNet( $ipRemote, '66.196.64.0/18' ) or			// Inktomi has blocks 66.196.64.0 - 66.196.127.255
-		ipIsInNet( $ipRemote, '74.6.0.0/16' ) or				// Inktomi has blocks 74.6.0.0 - 74.6.255.255 
 		ipIsInNet( $ipRemote, '66.228.160.0/19' ) or			// Overture has blocks 66.228.160.0 - 66.228.191.255
 		ipIsInNet( $ipRemote, '68.142.192.0/18' ) or			// Inktomi has blocks 68.142.192.0 - 68.142.255.255
 		ipIsInNet( $ipRemote, '72.30.0.0/16' ) or				// Inktomi has blocks 72.30.0.0 - 72.30.255.255
@@ -292,7 +300,7 @@ Disallow: /cgi-bin
 	$ref			= ${$_SERVER_ARRAY}[ 'HTTP_USER_AGENT' ];
 	$bot			= 'N';
 	// Check if it is a 'good' bot
-	$agents		= array( 'Googlebot', 'Yahoo', 'msnbot', 'Jeeves', 'Mediapartners' ); 
+	$agents		= array( 'Googlebot', 'Yahoo', 'msnbot', 'Jeeves', 'Mediapartners' );
 	foreach( $agents as $agent ) {
 		if( strpos( $ref, $agent ) !== FALSE ) {
 			$bot = 'Y';
@@ -310,50 +318,19 @@ Disallow: /cgi-bin
  * extended period. However, you may wish to let some bots hammer your site at will,
  * and routines 2 or 3 above will allow that.
  *
- *
  * Directory permissions: `_B_DIRECTORY` needs to pre-exist *and* be read-writeable by
  * the apache-group. It is best if it is not web-accessible.
  *
- *
  * Both $ipLogFile and $ipFile are created on-the-fly if not already existing.
- *
- *
- * Server resetting $ipFile atime problem:
- *   This routine makes the fundamental assumption that all $ipFile-files are untouched by
- *   anything other than itself. chu2117 was on a shared-server, and the server backup
- *   process reset the atime of all $ipFile-files at 2:30am each day, blocking most visitors
- *   at that time. Here is the fix:
- *
- *   current coding:
- *   59 if( $duration > $bStartOver ) {// restart tracking 
- *   60    $startTime= $hitsTime = $time; 
- *   61    $duration= $visits = 1; 
- *   62 } ...
- *
- *   new coding:
-        $now = getdate( $time ); 
-        $checkTime = mktime( 2, 30, 0, $now[ 'mon' ], $now[ 'mday' ], $now[ 'year' ]); 
-        $checkInterval = 600; // 10 mins 
-        if(( $duration > $bStartOver ) or 
-          (( $time > $checkTime ) and (( $time - $checkTime ) < $checkInterval )) 
- *   59 ) {// restart tracking 
- *        ... 
- *   62 } ...
- *
- *   (thread at: http://www.webmasterworld.com/php/3126380.htm)
- *   (fix at: http://www.webmasterworld.com/php/3126380-3-10.htm#msg3144958)
- *
  *
  * `_B_DIRECTORY` will fill with many thousands of zero-byte files. That is normal
  * behaviour. The files ($ipFile) are used to track users by IP-address. As zero-byte
  * files they do not represent any disk-space risk and may be ignored. They do still
  * represent a resource-consumption risk, but this has not affected my server at all.
  *
- *
  * $ipLogFile will only appear when a bot is blocked, and will roll-over when
  * _B_LOGMAXLINES is reached. Routine to read it left as an excercise for the reader!!!
  * (sample code at http://www.modem-help.co.uk/help/diary20040526.html)
- *
  *
  * Fast-Scraper reset logic:
  * The fast-scraper test is: (( $visits / $duration ) > ( $bMaxVisit / $bInterval )).
@@ -362,23 +339,16 @@ Disallow: /cgi-bin
  * As the test does not begin until ( $visits >= $bMaxVisit ), it is imperative that
  * ( $bMaxVisit / $bInterval ) >= 1.
  *
- *
  * Changelog:
-   2007-01-06 added 'Server resetting $ipFile atime' fix to comments.
-   2006-10-24 extra block added for Inktomi; bugfix on slow-scraper text (float not int) (thanks chu2117).
-   2006-06-14 bugfix on $ipLength > 3 [umask() was wrong value].
-   2006-04-26 bTotVisit upped to 1500 from 1000 (Googlebot + Adsense-bot now share IPs).
-              [ June note: bTotVisit==2500, $ipLength==4 on a 10,000 page/day site still shows  ]
-              [ occasional slow-scraper block to G bot (Mediapartners-Google + GBot on same IP) ]
-   2006-03-13 array_shift modified to correct over-sized logs.
-   2006-03-05 added extra IPs to Whitelist routine (thanks incrediBILL).
-   2006-02-16 added Retry-After (see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.37).
-   2006-01-24 fast-scraper block reset fixed ($bPenalty now accurate); $fileMTime, $fileATime renamed.
-   2006-01-03 code addition for $ipLength>3 for v busy sites (thanks inbound)
-   2005-12-19 added bottom code (thanks incrediBILL) + re-wrote IP-based white-list (thanks Hanu)
-   2005-12-17 added comments at bottom + made start-over duration a variable.
-   2005-11-20 set TAB=3 spaces; see also http://www.webmasterworld.com/forum88/10425.htm
-   2003-01-11 original code via xlcus; see http://www.webmasterworld.com/forum88/119.htm
+ * 2006-03-13 array_shift modified to correct over-sized logs.
+ * 2006-03-05 added extra IPs to Whitelist routine (thanks incrediBILL).
+ * 2006-02-16 added Retry-After (see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.37).
+ * 2006-01-24 fast-scraper block reset fixed ($bPenalty now accurate); $fileMTime, $fileATime renamed.
+ * 2006-01-03 code addition for $ipLength>3 for v busy sites (thanks inbound)
+ * 2005-12-19 added bottom code (thanks incrediBILL) + re-wrote IP-based white-list (thanks Hanu)
+ * 2005-12-17 added comments at bottom + made start-over duration a variable.
+ * 2005-11-20 set TAB=3 spaces; see also http://www.webmasterworld.com/forum88/10425.htm
+ * 2003-01-11 original code via xlcus; see http://www.webmasterworld.com/forum88/119.htm
  *
  * Reminder for future additions (thanks incrediBILL):
  *    1 user dashboard

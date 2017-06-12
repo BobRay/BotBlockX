@@ -47,6 +47,8 @@ if ($fp) {
         $lineArray = explode('`',$line);
         $output .= '<tr $style>';
         foreach($lineArray as $item) {
+            $item = strip_tags($item);
+            $bLogLine = htmlspecialchars($item, ENT_QUOTES, 'UTF-8');
             $output .= '<td style="word-break:break-all;border-bottom:1px solid #E5E5E5" width = "' . $cellWidth . '">' . $item . '</td>';
         }
         $output .= '</tr>';

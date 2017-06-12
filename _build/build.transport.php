@@ -31,7 +31,7 @@
 /* Set package info be sure to set all of these */
 define('PKG_NAME','BotBlockX');
 define('PKG_NAME_LOWER','botblockx');
-define('PKG_VERSION','1.0.2');
+define('PKG_VERSION','1.2.0');
 define('PKG_RELEASE','pl');
 define('PKG_CATEGORY','BotBlockX');
 
