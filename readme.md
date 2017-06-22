@@ -3,10 +3,14 @@ BotBlockX Extra for MODx Revolution
 
 This plugin is in development and should NOT be used on a live server.
 
-**Author:** Alex Kemp [bot-block](http://biostatisticien.eu/www.searchlores.org/bot-block.php.txt)
-**Author:** Bob Ray <http://bobsguides.com> [Bob's Guides](http://bobsguides.com)
+**Author:** Alex Kemp [bot-block](http://biostatisticien.eu/www.searchlores.org/bot-block.php.txt)<br>
+**Author:** Bob Ray [Bob's Guides](http://bobsguides.com)
 
-Documentation is available at [Bob's Guides](http://bobsguides.com/botblockx-tutorial.html)
+**Documentation:** [BotBlockX Docs](http://bobsguides.com/botblockx-tutorial.html)
+
+**Bugs and requests:** [BotBlockX Issues](https://github.com/BobRay/BotBlockX/issues)
+
+**Questions about using BotBlockX** [MODx Forums](https://forums.modx.com)
 
 BotBlockX is a plugin for MODx Revolution that stops bad bots from hammering your site looking for a way to break in and stops scrapers from stealing your content.
 
