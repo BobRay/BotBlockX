@@ -2,7 +2,7 @@
 
 /**
  * Default properties for the Block Log Report snippet
- * @author Bob Ray <http://bobsguides.com>
+ * @author Bob Ray <https://bobsguides.com>
  * 10/31/2011
  *
  * @package botblockx

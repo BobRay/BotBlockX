@@ -1,7 +1,7 @@
 <?php
 /**
  * Resource objects for the BotBlockX package
- * @author Bob Ray <http://bobsguides.com>
+ * @author Bob Ray <https://bobsguides.com>
  * 10/12/2011
  *
  * @package botblockx

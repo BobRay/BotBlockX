@@ -1,6 +1,6 @@
 /**
  * BlockLogReport
- * Copyright 2011-2013 Bob Ray
+ * Copyright 2011-2017 Bob Ray
  *
  * BlockLogReport is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -16,7 +16,7 @@
  * Suite 330, Boston, MA 02111-1307 USA
  *
  * @package botblockx
- * @author Bob Ray <http://bobsguides.com>
+ * @author Bob Ray <https://bobsguides.com>
   
  *
  * Description: The BlockLogReport snippet presents the contents of the block log as a table.

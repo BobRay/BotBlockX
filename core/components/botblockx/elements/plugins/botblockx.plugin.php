@@ -1,10 +1,10 @@
 <?php
 /**
  * BotBlockX Plugin
- * Copyright 2011-2014 Bob Ray <http://bobsguides.com>
+ * Copyright 2011-2017 Bob Ray <https://bobsguides.com>
  * @author Alex Kemp <modem-help.co.uk>
  * Mods by Susan Ottwell
- * @author (Revolution) Bob Ray <http://bobsguides.com>
+ * @author (Revolution) Bob Ray <https://bobsguides.com>
  * Download original: http://download.modem-help.co.uk/non-modem/PHP/Rogue-Bot-Blocking/
  * 10/25/2011
  *
