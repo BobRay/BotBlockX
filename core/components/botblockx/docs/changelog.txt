@@ -1,5 +1,9 @@
 Changelog for BotBlockX
 
+BotBlockX 1.2.1
+-------------------
+Update Copyrights
+
 BotBlockX 1.2.0
 -------------------
 Fix potential XSS vulnerability
