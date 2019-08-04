@@ -1,7 +1,7 @@
 <?php
 /**
  * BotBlockX Plugin
- * Copyright 2011-2017 Bob Ray <https://bobsguides.com>
+ * Copyright 2011-2019 Bob Ray <https://bobsguides.com>
  * @author Alex Kemp <modem-help.co.uk>
  * Mods by Susan Ottwell
  * @author (Revolution) Bob Ray <https://bobsguides.com>
