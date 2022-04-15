@@ -1,8 +1,6 @@
 BotBlockX Extra for MODX Revolution
 ===================================
 
-This plugin is in development and should NOT be used on a live server.
-
 **Author:** Alex Kemp [bot-block](http://biostatisticien.eu/www.searchlores.org/bot-block.php.txt)<br>
 **Author:** Bob Ray [Bob's Guides](https://bobsguides.com)
 

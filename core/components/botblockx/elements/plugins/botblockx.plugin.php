@@ -33,13 +33,15 @@ if (!function_exists("my_debug") && $scriptProperties['debug']) {
     function my_debug($message, $clear = false)
     {
         global $modx;
-
-        $chunk = $modx->getObject('modChunk', array('name' => 'Debug'));
+        $prefix = $isMODX3 = $modx->getVersionData()['version'] >= 3
+            ? 'MODX\Revolution\\'
+            : '';
+        $chunk = $modx->getObject($prefix . 'modChunk', array('name' => 'Debug'));
         if (!$chunk) {
-            $chunk = $modx->newObject('modChunk', array('name' => 'Debug'));
+            $chunk = $modx->newObject($prefix . 'modChunk', array('name' => 'Debug'));
             $chunk->setContent('');
             $chunk->save();
-            $chunk = $modx->getObject('modChunk', array('name' => 'Debug'));
+            $chunk = $modx->getObject($prefix . 'modChunk', array('name' => 'Debug'));
         } else {
             if ($clear) {
                 $content = '';
@@ -54,6 +56,7 @@ if (!function_exists("my_debug") && $scriptProperties['debug']) {
 }
 
 /* Don't execute in Manager */
+/** @var $modx modX */
 if ($modx->context->get('key') == 'mgr') {
     return '';
 }
