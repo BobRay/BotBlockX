@@ -2,7 +2,7 @@
 /**
  * BotBlockX Build Script
  *
- * Copyright 2011-2019 Bob Ray <https://bobsguides.com>
+ * Copyright 2011-2022 Bob Ray <https://bobsguides.com>
  *
  * BotBlockX is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -31,7 +31,7 @@
 /* Set package info be sure to set all of these */
 define('PKG_NAME','BotBlockX');
 define('PKG_NAME_LOWER','botblockx');
-define('PKG_VERSION','1.2.1');
+define('PKG_VERSION','1.3.0');
 define('PKG_RELEASE','pl');
 define('PKG_CATEGORY','BotBlockX');
 
